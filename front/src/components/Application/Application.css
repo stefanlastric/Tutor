@@ -1,0 +1,22 @@
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+.application {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.navigation {
+}
+
+.content {
+  flex: 1;
+}
+
+.footer {
+}
