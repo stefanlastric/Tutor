@@ -12,7 +12,7 @@ const SubjectSchema = new mongoose.Schema(
       required: true,
     },
     studentlimit: {
-      type: Number,
+      type: String,
       required: true,
     },
     date: {
@@ -26,7 +26,6 @@ const SubjectSchema = new mongoose.Schema(
       },
       text: {
         type: String,
-        required: true,
       },
       name: {
         type: String,

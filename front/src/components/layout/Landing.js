@@ -3,10 +3,9 @@ import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-//TODO put on posts
 const Landing = ({ isAuthenticated }) => {
   if (isAuthenticated) {
-    return <Redirect to='/dashboard' />;
+    return <Redirect to='/' />;
   }
 
   return (

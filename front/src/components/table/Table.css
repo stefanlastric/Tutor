@@ -1,0 +1,41 @@
+.table {
+  width: 100%;
+  border-spacing: 0px;
+}
+
+tbody:before {
+  content: '-';
+  display: block;
+  line-height: 1em;
+  color: transparent;
+}
+
+th {
+  margin-bottom: 16px;
+  padding: 16px;
+  border-top: 1px solid gray;
+  border-bottom: 1px solid gray;
+  &:first-child {
+    border-left: 1px solid gray;
+  }
+  &:last-child {
+    border-right: 1px solid gray;
+  }
+}
+td {
+  padding: 16px;
+  border: 1px solid gray;
+}
+
+.table_header {
+  border: 10px solid red !important;
+  margin-bottom: 16px;
+}
+.table_header_row {
+  background-color: white;
+}
+
+.table_row_data {
+  display: flex;
+  justify-content: center;
+}

@@ -4,8 +4,8 @@
   "description": "Tutor app",
   "main": "index.js",
   "dependencies": {
-    "cors": "^2.8.5",
-    "concurrently": "^5.2.0"
+    "concurrently": "^5.2.0",
+    "cors": "^2.8.5"
   },
   "devDependencies": {},
   "scripts": {
