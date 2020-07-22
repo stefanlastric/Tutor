@@ -10,9 +10,8 @@ const ErrorPage = () => {
           <h1>Oops!</h1>
           <h2>404 - The Page cannot be found</h2>
         </div>
-        <a>
-          <NavLink to='/'>Go to Home</NavLink>
-        </a>
+
+        <NavLink to='/'>Go to Home</NavLink>
       </div>
     </div>
   );

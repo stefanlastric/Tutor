@@ -12,9 +12,25 @@ const AppNavbar = ({ auth: { isAuthenticated, loading }, logout }) => {
         activeStyle={{ color: '#ED5035' }}
         as={NavLink}
         exact
+        to='/subjects'
+      >
+        Subjects
+      </Nav.Link>
+      <Nav.Link
+        activeStyle={{ color: '#ED5035' }}
+        as={NavLink}
+        exact
         to='/subject/add'
       >
         Add New Subject
+      </Nav.Link>
+      <Nav.Link
+        activeStyle={{ color: '#ED5035' }}
+        as={NavLink}
+        exact
+        to='/appointments'
+      >
+        Appointments
       </Nav.Link>
       <Nav.Link
         activeStyle={{ color: '#ED5035' }}

@@ -12,25 +12,26 @@ const Table = (props) => {
         </tr>
       </thead>
       <tbody>
-        {data.map((row, index) => (
-          <tr key={index}>
-            {headers.map((header, index) => (
-              <td key={index} className={`${header.greened && 'greened'}`}>
-                <span
-                  className={`table_row_data ${
-                    header.greened && 'greened_data'
-                  } `}
-                >
-                  {options &&
-                  options.customComponents &&
-                  options.customComponents[header.key]
-                    ? options.customComponents[header.key].component(row)
-                    : row[header.key]}
-                </span>
-              </td>
-            ))}
-          </tr>
-        ))}
+        {data &&
+          data.map((row, index) => (
+            <tr key={index}>
+              {headers.map((header, index) => (
+                <td key={index} className={`${header.greened && 'greened'}`}>
+                  <span
+                    className={`table_row_data ${
+                      header.greened && 'greened_data'
+                    } `}
+                  >
+                    {options &&
+                    options.customComponents &&
+                    options.customComponents[header.key]
+                      ? options.customComponents[header.key].component(row)
+                      : row[header.key]}
+                  </span>
+                </td>
+              ))}
+            </tr>
+          ))}
       </tbody>
     </table>
   );

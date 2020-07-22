@@ -6,17 +6,23 @@ import {
   GET_APPOINTMENTS,
   APPOINTMENT_ERROR,
   DELETE_APPOINTMENT,
+  APPROVE_APPOINTMENT,
 } from './types';
 
-//export current user appointments
-export const getCurrentAppointment = () => async (dispatch) => {
+export const approveAppointment = (id) => async (dispatch) => {
   try {
-    const res = await axios.get('/appointments/me');
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const res = await axios.post(`/appointments/approve/${id}`);
 
     dispatch({
-      type: GET_APPOINTMENT,
-      payload: res.data,
+      type: APPROVE_APPOINTMENT,
+      payload: { id },
     });
+    dispatch(setAlert('Appointment Approved', 'success'));
   } catch (err) {
     dispatch({
       type: APPOINTMENT_ERROR,

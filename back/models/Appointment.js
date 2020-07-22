@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const AppointmentSchema = new mongoose.Schema(
   {
     title: {

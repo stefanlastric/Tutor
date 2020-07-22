@@ -13,7 +13,9 @@ const User = require('../models/User');
 
 router.get('/', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await await User.findById(req.user.id)
+      .populate('role')
+      .select('-password');
     res.json(user);
   } catch (err) {
     console.error(err.message);
@@ -40,8 +42,7 @@ router.post(
 
     try {
       //see if user exists
-      let user = await User.findOne({ email });
-
+      let user = await User.findOne({ email }).populate('role');
       if (!user) {
         return res
           .status(400)
@@ -55,10 +56,10 @@ router.post(
           .status(400)
           .json({ errors: [{ msg: 'Invalid credentials' }] });
       }
-
       const payload = {
         user: {
           id: user.id,
+          role: user.role.name,
         },
       };
       let secret;

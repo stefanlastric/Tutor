@@ -3,20 +3,26 @@ import {
   REGISTER_FAIL,
   USER_LOADED,
   AUTH_ERROR,
+  LOGIN_SUCCESS_ADMIN,
+  LOGIN_SUCCESS_TEACHER,
+  LOGIN_SUCCESS_STUDENT,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  ACCOUNT_DELETED
+  ACCOUNT_DELETED,
 } from '../actions/types';
 
 const initialState = {
   token: localStorage.getItem('token'),
   isAuthenticated: false,
+  isAdmin: false,
+  isTeacher: false,
+  isStudent: false,
   loading: true,
-  user: null
+  user: null,
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
     case USER_LOADED:
@@ -24,16 +30,37 @@ export default function(state = initialState, action) {
         ...state,
         isAuthenticated: true,
         loading: false,
-        user: payload
+        user: payload,
       };
     case REGISTER_SUCCESS:
+    case LOGIN_SUCCESS_ADMIN:
+      localStorage.setItem('token', payload.token);
+      return {
+        isAuthenticated: true,
+        isAdmin: true,
+        loading: false,
+      };
+    case LOGIN_SUCCESS_TEACHER:
+      localStorage.setItem('token', payload.token);
+      return {
+        isAuthenticated: true,
+        isTeacher: true,
+        loading: false,
+      };
+    case LOGIN_SUCCESS_STUDENT:
+      localStorage.setItem('token', payload.token);
+      return {
+        isAuthenticated: true,
+        isStudent: true,
+        loading: false,
+      };
     case LOGIN_SUCCESS:
       localStorage.setItem('token', payload.token);
       return {
         ...state,
         ...payload,
         isAuthenticated: true,
-        loading: false
+        loading: false,
       };
     case REGISTER_FAIL:
     case AUTH_ERROR:
@@ -44,8 +71,12 @@ export default function(state = initialState, action) {
       return {
         ...state,
         token: null,
+        user: null,
         isAuthenticated: false,
-        loading: false
+        isAdmin: false,
+        isTeacher: false,
+        isStudent: false,
+        loading: false,
       };
     default:
       return state;
