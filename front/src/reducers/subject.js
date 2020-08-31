@@ -1,5 +1,6 @@
 import {
   GET_SUBJECTS,
+  GET_MY_SUBJECTS,
   GET_SUBJECT,
   SUBJECT_ERROR,
   DELETE_SUBJECT,
@@ -17,6 +18,7 @@ export default function (state = initialState, action) {
 
   switch (type) {
     case GET_SUBJECTS:
+    case GET_MY_SUBJECTS:
       return {
         ...state,
         subjects: payload,

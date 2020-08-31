@@ -1,0 +1,8 @@
+.subjects_table {
+  width: 100%;
+}
+
+.clickable {
+  cursor: pointer;
+  color: #0000ee;
+}

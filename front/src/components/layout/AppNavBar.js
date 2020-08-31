@@ -5,6 +5,8 @@ import { logout } from '../../actions/auth';
 import { Nav, Navbar } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 
+import { isAdmin, isTeacher, isStudent } from '../../utils/helpers';
+
 const AppNavbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   const authLink = (
     <Nav className='display: flex;'>
@@ -16,22 +18,48 @@ const AppNavbar = ({ auth: { isAuthenticated, loading }, logout }) => {
       >
         Subjects
       </Nav.Link>
-      <Nav.Link
-        activeStyle={{ color: '#ED5035' }}
-        as={NavLink}
-        exact
-        to='/subject/add'
-      >
-        Add New Subject
-      </Nav.Link>
-      <Nav.Link
-        activeStyle={{ color: '#ED5035' }}
-        as={NavLink}
-        exact
-        to='/appointments'
-      >
-        Appointments
-      </Nav.Link>
+      {isTeacher() && (
+        <Nav>
+          <Nav.Link
+            activeStyle={{ color: '#ED5035' }}
+            as={NavLink}
+            exact
+            to='/mysubjects'
+          >
+            My Subjects
+          </Nav.Link>
+          <Nav.Link
+            activeStyle={{ color: '#ED5035' }}
+            as={NavLink}
+            exact
+            to='/subject/add'
+          >
+            Add New Subject
+          </Nav.Link>{' '}
+        </Nav>
+      )}
+      {isAdmin() && (
+        <Nav>
+          <Nav.Link
+            activeStyle={{ color: '#ED5035' }}
+            as={NavLink}
+            exact
+            to='/teachers'
+          >
+            Teachers
+          </Nav.Link>
+
+          <Nav.Link
+            activeStyle={{ color: '#ED5035' }}
+            as={NavLink}
+            exact
+            to='/appointments'
+          >
+            Appointments
+          </Nav.Link>
+        </Nav>
+      )}
+
       <Nav.Link
         activeStyle={{ color: '#ED5035' }}
         as={NavLink}
@@ -69,6 +97,7 @@ const AppNavbar = ({ auth: { isAuthenticated, loading }, logout }) => {
       </Nav.Item>
     </Nav>
   );
+  //TODO napraviti vise ovih
 
   return (
     <div className='navigation-bar'>

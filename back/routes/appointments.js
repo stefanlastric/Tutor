@@ -8,11 +8,43 @@ const Appointment = require('../models/Appointment');
 const User = require('../models/User');
 
 //@route    GET appointments
-//@desc     Get all appointments
+//@desc     Get all appointments student
 //@access   public
 router.get('/', async (req, res) => {
   try {
     const appointments = await Appointment.find();
+    res.json(appointments);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Server Error' });
+  }
+});
+
+//@route    GET appointments
+//@desc     Get all appointments student
+//@access   public
+router.get('/student', async (req, res) => {
+  try {
+    const userT = await User.findOne({ _id: req.user.id });
+    const appointments = await Appointment.find({
+      'users.createdby': userT._id,
+    });
+    res.json(appointments);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Server Error' });
+  }
+});
+
+//@route    GET appointments
+//@desc     Get all appointments teacher
+//@access   public
+router.get('/teacher', async (req, res) => {
+  try {
+    const userT = await User.findOne({ _id: req.user.id });
+    const appointments = await Appointment.find({
+      'users.acceptedby': userT._id,
+    });
     res.json(appointments);
   } catch (err) {
     console.error(err.message);

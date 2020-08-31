@@ -12,9 +12,12 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   CLEAR_PROFILE,
+  GET_TEACHERS,
+  TEACHER_ERROR,
 } from './types';
 
 import setAuthToken from '../utils/setAuthToken';
+import { setLocalStorageRole } from '../utils/helpers';
 //Load user
 export const loadUser = () => async (dispatch) => {
   if (localStorage.token) {
@@ -22,27 +25,28 @@ export const loadUser = () => async (dispatch) => {
 
     try {
       const res = await axios.get('/login');
-
+      setLocalStorageRole(res.data.role);
       dispatch({
         type: USER_LOADED,
         payload: res.data,
       });
-      if (res.data.role.name === 'Admin') {
-        dispatch({
-          type: LOGIN_SUCCESS_ADMIN,
-          payload: res.data,
-        });
-      } else if (res.data.role.name === 'Teacher') {
-        dispatch({
-          type: LOGIN_SUCCESS_TEACHER,
-          payload: res.data,
-        });
-      } else {
-        dispatch({
-          type: LOGIN_SUCCESS_STUDENT,
-          payload: res.data,
-        });
-      }
+
+      // if (res.data.role.name === 'Admin') {
+      //   dispatch({
+      //     type: LOGIN_SUCCESS_ADMIN,
+      //     payload: res.data,
+      //   });
+      // } else if (res.data.role.name === 'Teacher') {
+      //   dispatch({
+      //     type: LOGIN_SUCCESS_TEACHER,
+      //     payload: res.data,
+      //   });
+      // } else {
+      //   dispatch({
+      //     type: LOGIN_SUCCESS_STUDENT,
+      //     payload: res.data,
+      //   });
+      // }
     } catch (err) {
       dispatch({
         type: AUTH_ERROR,

@@ -21,6 +21,25 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
+//@route    GET subjects/my
+//@desc     Get my subjects
+//@access   public
+router.get('/my', auth, async (req, res) => {
+  try {
+    const userT = await User.findOne({ _id: req.user.id });
+    const subjects = await Subject.find({ createdby: userT._id });
+    //check if subject exist
+    if (!subjects) {
+      return res.status(404).json({ msg: 'Subject does not exist' });
+    }
+
+    res.json(subjects);
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).json({ msg: 'Server Error' });
+  }
+});
+
 //@route    GET subjects/id
 //@desc     Get subjects by id
 //@access   public

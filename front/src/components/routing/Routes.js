@@ -10,7 +10,14 @@ import Table from '../table/Table';
 import AddSubject from '../subjects/AddSubject';
 import AddAppointment from '../appointments/AddAppointment/AddAppointment';
 import Appointments from '../appointments/Appointments';
+import MySubjects from '../subjects/MySubjects';
 import Subjects from '../subjects/Subjects';
+import AppointmentsStudent from '../appointments/AppointmentsStudent';
+import AppointmentsTeacher from '../appointments/AppointmentsTeacher';
+import Teachers from '../tutors/Tutors';
+
+import { isAdmin, isTeacher, isStudent } from '../../utils/helpers';
+
 class Routes extends React.Component {
   render() {
     const { isAuthenticated, isLoading } = this.props;
@@ -29,16 +36,34 @@ class Routes extends React.Component {
                 <Route private path='/subject/add' component={AddSubject} />
                 <Route
                   private
+                  path='/appointments/student'
+                  component={AppointmentsStudent}
+                />
+                <Route
+                  private
+                  path='/appointments/teacher'
+                  component={AppointmentsTeacher}
+                />
+                <Route
+                  private
                   path='/appointment/add'
                   component={AddAppointment}
                 />
+                <Route private path='/subjects' component={Subjects} exact />
+                <Route
+                  private
+                  path='/mysubjects'
+                  component={MySubjects}
+                  exact
+                />
+                )&& isAdmin() && (
                 <Route
                   private
                   path='/appointments'
                   component={Appointments}
                   exact
                 />
-                <Route private path='/subjects' component={Subjects} exact />
+                <Route private path='/teachers' component={Teachers} exact />
               </Switch>
             )}
             <Route component={NotFound} />

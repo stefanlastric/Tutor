@@ -52,17 +52,10 @@ class Subjects extends Component {
             <div>
               <button
                 onClick={() => {
-                  console.log('from edit: ', rowData);
+                  console.log('from make appointment: ', rowData);
                 }}
               >
-                Edit
-              </button>
-              <button
-                onClick={() => {
-                  console.log('from delete: ', rowData);
-                }}
-              >
-                Delete
+                Request Appointment
               </button>
             </div>
           ),
@@ -71,7 +64,6 @@ class Subjects extends Component {
           component: (rowData) => {
             return (
               <div>
-                {' '}
                 <Moment format='DD/MMM/YYYY hh:mm:ss'>
                   {rowData.datecreated}
                 </Moment>

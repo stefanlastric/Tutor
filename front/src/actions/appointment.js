@@ -48,6 +48,40 @@ export const getAppointments = () => async (dispatch) => {
   }
 };
 
+//Get all AppointmentsStudent
+export const getAppointmentsStudent = () => async (dispatch) => {
+  try {
+    const res = await axios.get('/appointments/student');
+
+    dispatch({
+      type: GET_APPOINTMENTS,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch({
+      type: APPOINTMENT_ERROR,
+      payload: { msg: err.response, status: err.response },
+    });
+  }
+};
+
+//Get all AppointmentsTeacher
+export const getAppointmentsTeacher = () => async (dispatch) => {
+  try {
+    const res = await axios.get('/appointments/teacher');
+
+    dispatch({
+      type: GET_APPOINTMENTS,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch({
+      type: APPOINTMENT_ERROR,
+      payload: { msg: err.response, status: err.response },
+    });
+  }
+};
+
 //Get appointments by ID
 export const getAppointmentsById = (userId) => async (dispatch) => {
   try {

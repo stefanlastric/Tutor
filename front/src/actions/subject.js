@@ -5,6 +5,7 @@ import {
   GET_SUBJECT,
   GET_SUBJECTS,
   SUBJECT_ERROR,
+  GET_MY_SUBJECTS,
   DELETE_SUBJECT,
 } from './types';
 
@@ -32,6 +33,23 @@ export const getSubjects = () => async (dispatch) => {
 
     dispatch({
       type: GET_SUBJECTS,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch({
+      type: SUBJECT_ERROR,
+      payload: { msg: err.response, status: err.response },
+    });
+  }
+};
+
+//Get my subjects
+export const getMySubjects = () => async (dispatch) => {
+  try {
+    const res = await axios.get(`/subjects/my`);
+
+    dispatch({
+      type: GET_MY_SUBJECTS,
       payload: res.data,
     });
   } catch (err) {
