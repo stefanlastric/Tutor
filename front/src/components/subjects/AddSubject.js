@@ -10,8 +10,9 @@ class AddSubject extends Component {
 
     this.state = {
       title: '',
+      description: '',
       priceperhour: '',
-      studentlimit: '',
+      timelimit: '',
     };
   }
   handleChange = (event) => {
@@ -26,8 +27,9 @@ class AddSubject extends Component {
       '/subjects',
       {
         title: this.state.title,
+        description: this.state.description,
         priceperhour: this.state.priceperhour,
-        studentlimit: this.state.studentlimit,
+        timelimit: this.state.timelimit,
       },
       { headers: { Authorization: 'myJwtToken' } }
     )
@@ -55,7 +57,17 @@ class AddSubject extends Component {
               name='title'
               onChange={this.handleChange}
               type='text'
-              placeholder='Enter subject title'
+              placeholder='Enter subject title.'
+            />
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label>Description:</Form.Label>
+            <Form.Control
+              name='description'
+              onChange={this.handleChange}
+              type='text'
+              placeholder='Enter subject description.'
             />
           </Form.Group>
 
@@ -65,17 +77,17 @@ class AddSubject extends Component {
               name='priceperhour'
               onChange={this.handleChange}
               type='text'
-              placeholder='What is the price per hour for this subject?'
+              placeholder='What is the price per hour ?'
             />
           </Form.Group>
 
           <Form.Group>
-            <Form.Label>Student Limit:</Form.Label>
+            <Form.Label>Time Limit:</Form.Label>
             <Form.Control
-              name='studentlimit'
+              name='timelimit'
               onChange={this.handleChange}
               type='text'
-              placeholder='What is the weekly limit of students?'
+              placeholder='What is the daily timelimit ?'
             />
           </Form.Group>
 

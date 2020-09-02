@@ -68,10 +68,13 @@ router.post(
     auth,
     [
       check('title', 'Title of subject is required').not().isEmpty(),
+      check('description', 'Price per hour of subject is required')
+        .not()
+        .isEmpty(),
       check('priceperhour', 'Price per hour of subject is required')
         .not()
         .isEmpty(),
-      check('studentlimit', 'Student limit of subject is required')
+      check('timelimit', 'Time limit per appointment is required')
         .not()
         .isEmpty(),
     ],
@@ -91,12 +94,13 @@ router.post(
           .status(401)
           .json({ msg: 'You are not a teacher, authorization denied' });
       }
-      const { title, priceperhour, studentlimit } = req.body;
+      const { title, description, priceperhour, timelimit } = req.body;
 
       const subjectsFields = {};
+      if (description) subjectsFields.description = description;
       if (title) subjectsFields.title = title;
       if (priceperhour) subjectsFields.priceperhour = priceperhour;
-      if (studentlimit) subjectsFields.studentlimit = studentlimit;
+      if (timelimit) subjectsFields.timelimit = timelimit;
 
       // subjectsFields.users = [req.user];
       // let subjects = await Subject.findOne({ user: req.user.id });

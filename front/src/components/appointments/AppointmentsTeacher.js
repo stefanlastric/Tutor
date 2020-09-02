@@ -39,7 +39,7 @@ const headers = [
 ];
 
 function formatYesNo(value) {
-  return value === 0 ? 'No' : 'Yes';
+  return value == 0 ? 'No' : 'Yes';
 }
 
 class Appointments extends Component {
@@ -50,7 +50,7 @@ class Appointments extends Component {
     };
   }
   componentDidMount() {
-    this.getAppointments();
+    this.getAppointmentsTeacher();
   }
 
   getAppointmentsTeacher = () => {
@@ -73,13 +73,6 @@ class Appointments extends Component {
               <button onClick={() => approveAppointment(rowData._id)}>
                 Approve Appointment
               </button>
-              <button
-                onClick={() => {
-                  console.log('from cancel: ', rowData);
-                }}
-              >
-                Cancel
-              </button>
             </div>
           ),
         },
@@ -97,6 +90,11 @@ class Appointments extends Component {
         approved: {
           component: (rowData) => {
             return <div>{formatYesNo(rowData.approved)}</div>;
+          },
+        },
+        canceled: {
+          component: (rowData) => {
+            return <div>{formatYesNo(rowData.canceled)}</div>;
           },
         },
       },

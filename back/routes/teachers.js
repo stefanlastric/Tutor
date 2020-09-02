@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
 
+const auth = require('../middleware/auth');
 const User = require('../models/User');
 
 let secret;
@@ -14,6 +15,9 @@ if (!process.env.HEROKU) {
   secret = process.env.jwtSecret;
 }
 
+//@route    POST teacher
+//@desc     Register a teacher
+//@access   public
 router.post(
   '/',
   [
@@ -93,6 +97,37 @@ router.get('/', async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: 'Server Error' });
+  }
+});
+
+//@route    POST teachers/approve/:id
+//@desc     Approve a teacher
+//@access   Private
+router.post('/approve/:id', auth, async (req, res) => {
+  try {
+    const teachers = await User.findById(req.params.id);
+
+    //check if the teacher has already been approved
+    if (teachers.approved === true) {
+      return res.status(400).json({ msg: 'Teacher already approved' });
+    }
+
+    //check if the person is a teacher
+    const userT = await User.findOne({ _id: req.user.id });
+    const roles = await Role.findOne({ _id: userT.role });
+    if (userT.role === null || roles.name != 'Admin') {
+      return res.status(401).json({ msg: 'Authorization denied' });
+    }
+
+    //update of approved teacher
+    await User.updateOne({ _id: teachers.id }, { $set: { approved: 'true' } });
+
+    await teachers.save();
+
+    res.json(teachers);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
   }
 });
 

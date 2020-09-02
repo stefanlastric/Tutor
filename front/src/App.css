@@ -42,3 +42,7 @@ body {
   align-items: center;
   height: 100%;
 }
+.desno {
+  display: flex;
+  flex-direction: row-reverse;
+}

@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Table from '../table/Table';
-import { getAppointmentsStudent } from '../../actions/appointment';
+import {
+  getAppointmentsStudent,
+  cancelAppointment,
+} from '../../actions/appointment';
 import './Appointments.css';
 import Moment from 'react-moment';
 const headers = [
@@ -30,13 +33,22 @@ const headers = [
     label: 'Date Created',
   },
   {
+    key: 'canceled',
+    label: 'Canceled',
+  },
+  {
+    key: 'users.canceledby',
+    label: 'Canceled by',
+  },
+
+  {
     key: 'actions',
     label: 'Actions',
   },
 ];
 
 function formatYesNo(value) {
-  return value === 0 ? 'No' : 'Yes';
+  return value == 0 ? 'No' : 'Yes';
 }
 
 class Appointments extends Component {
@@ -54,11 +66,23 @@ class Appointments extends Component {
     const { getAppointmentsStudent } = this.props;
     getAppointmentsStudent();
   };
-
+  cancelAppointment = () => {
+    const { cancelAppointment } = this.state;
+    cancelAppointment();
+  };
   getTableOptions = () => {
     const {} = this.props;
     const options = {
       customComponents: {
+        actions: {
+          component: (rowData) => (
+            <div>
+              <button onClick={() => cancelAppointment(rowData._id)}>
+                Cancel Appointment
+              </button>
+            </div>
+          ),
+        },
         datecreated: {
           component: (rowData) => {
             return (
@@ -73,6 +97,11 @@ class Appointments extends Component {
         approved: {
           component: (rowData) => {
             return <div>{formatYesNo(rowData.approved)}</div>;
+          },
+        },
+        canceled: {
+          component: (rowData) => {
+            return <div>{formatYesNo(rowData.canceled)}</div>;
           },
         },
       },
@@ -99,6 +128,7 @@ class Appointments extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   getAppointmentsStudent: () => dispatch(getAppointmentsStudent()),
+  cancelAppointment: (id) => dispatch(cancelAppointment(id)),
 });
 
 const mapStateToProps = (state) => ({

@@ -5,6 +5,7 @@ import {
   DELETE_APPOINTMENT,
   ADD_APPOINTMENT,
   APPROVE_APPOINTMENT,
+  CANCEL_APPOINTMENT,
 } from '../actions/types';
 const initialState = {
   appointments: [],
@@ -35,6 +36,7 @@ export default function (state = initialState, action) {
         appointments: [payload, ...state.appointments],
         loading: false,
       };
+    case CANCEL_APPOINTMENT:
     case APPROVE_APPOINTMENT:
       return {
         ...state,

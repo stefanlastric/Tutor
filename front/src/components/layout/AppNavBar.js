@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import { logout } from '../../actions/auth';
 import { Nav, Navbar } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
-
+import './AppNavBar.css';
 import { isAdmin, isTeacher, isStudent } from '../../utils/helpers';
 
 const AppNavbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   const authLink = (
-    <Nav className='display: flex;'>
+    <Nav>
       <Nav.Link
         activeStyle={{ color: '#ED5035' }}
         as={NavLink}
@@ -17,6 +17,14 @@ const AppNavbar = ({ auth: { isAuthenticated, loading }, logout }) => {
         to='/subjects'
       >
         Subjects
+      </Nav.Link>{' '}
+      <Nav.Link
+        activeStyle={{ color: '#ED5035' }}
+        as={NavLink}
+        exact
+        to='/teachers'
+      >
+        Teachers
       </Nav.Link>
       {isTeacher() && (
         <Nav>
@@ -36,19 +44,18 @@ const AppNavbar = ({ auth: { isAuthenticated, loading }, logout }) => {
           >
             Add New Subject
           </Nav.Link>{' '}
-        </Nav>
-      )}
-      {isAdmin() && (
-        <Nav>
           <Nav.Link
             activeStyle={{ color: '#ED5035' }}
             as={NavLink}
             exact
-            to='/teachers'
+            to='/appointments/teacher'
           >
-            Teachers
+            Appointments
           </Nav.Link>
-
+        </Nav>
+      )}
+      {isAdmin() && (
+        <Nav>
           <Nav.Link
             activeStyle={{ color: '#ED5035' }}
             as={NavLink}
@@ -59,27 +66,32 @@ const AppNavbar = ({ auth: { isAuthenticated, loading }, logout }) => {
           </Nav.Link>
         </Nav>
       )}
-
-      <Nav.Link
-        activeStyle={{ color: '#ED5035' }}
-        as={NavLink}
-        exact
-        to='/appointment/add'
-      >
-        Add New Appointment
-      </Nav.Link>
-      <Nav.Item>
-        <Nav.Link to='/dashboard'>
-          <i className='fas fa-user'></i>{' '}
-          <span className='hide-sm'>Dashboard</span>
-        </Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link onClick={logout} href='#!'>
-          <i className='fas fa-sign-out-alt'></i>{' '}
-          <span className='hide-sm'>Logout</span>
-        </Nav.Link>
-      </Nav.Item>
+      {isStudent() && (
+        <Nav>
+          <Nav.Link
+            activeStyle={{ color: '#ED5035' }}
+            as={NavLink}
+            exact
+            to='/appointments/student'
+          >
+            Appointments
+          </Nav.Link>
+        </Nav>
+      )}
+      <Nav className='desno'>
+        <Nav.Item>
+          <Nav.Link to='/dashboard'>
+            <i className='fas fa-user'></i>{' '}
+            <span className='hide-sm'>Profile</span>
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link onClick={logout} href='#!'>
+            <i className='fas fa-sign-out-alt'></i>{' '}
+            <span className='hide-sm'>Logout</span>
+          </Nav.Link>
+        </Nav.Item>
+      </Nav>
     </Nav>
   );
 

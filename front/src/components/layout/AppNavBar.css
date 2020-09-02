@@ -1,3 +1,7 @@
 .navigation-bar {
-  background-color: lightblue;
+  background-color: rgba(90, 173, 184, 0);
+}
+.desno {
+  display: flex;
+  flex-direction: row-reverse;
 }

@@ -22,7 +22,15 @@ const AppointmentSchema = new mongoose.Schema(
       //0 not 1 yes
       default: false,
     },
+    canceled: {
+      type: Boolean,
+      default: false,
+    },
     users: {
+      for: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
+      },
       createdby: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user',
@@ -30,6 +38,12 @@ const AppointmentSchema = new mongoose.Schema(
       acceptedby: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user',
+      },
+
+      canceledby: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user',
+        default: null,
       },
     },
   },

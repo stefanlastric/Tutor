@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import Table from '../table/Table';
 import { getSubjects } from '../../actions/subject';
 import './Subjects.css';
-
 import Moment from 'react-moment';
+
 const headers = [
   {
     key: 'title',
@@ -14,9 +14,10 @@ const headers = [
     key: 'priceperhour',
     label: 'Price per hour',
   },
+
   {
-    key: 'studentlimit',
-    label: 'Weekly student limit',
+    key: 'available',
+    label: 'Available',
   },
   {
     key: 'datecreated',
@@ -28,6 +29,9 @@ const headers = [
   },
 ];
 
+function formatYesNo(value) {
+  return value == 0 ? 'No' : 'Yes';
+}
 class Subjects extends Component {
   constructor(props) {
     super(props);
@@ -39,6 +43,10 @@ class Subjects extends Component {
     this.getSubjects();
   }
 
+  nextPath(path) {
+    this.props.history.push(path);
+  }
+
   getSubjects = () => {
     const { getSubjects } = this.props;
     getSubjects();
@@ -48,17 +56,18 @@ class Subjects extends Component {
     const options = {
       customComponents: {
         actions: {
-          component: (rowData) => (
+          component: () => (
             <div>
-              <button
-                onClick={() => {
-                  console.log('from make appointment: ', rowData);
-                }}
-              >
+              <button onClick={() => this.nextPath('/appointment/add')}>
                 Request Appointment
               </button>
             </div>
           ),
+        },
+        available: {
+          component: (rowData) => {
+            return <div>{formatYesNo(rowData.available)}</div>;
+          },
         },
         datecreated: {
           component: (rowData) => {

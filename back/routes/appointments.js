@@ -43,7 +43,7 @@ router.get('/teacher', async (req, res) => {
   try {
     const userT = await User.findOne({ _id: req.user.id });
     const appointments = await Appointment.find({
-      'users.acceptedby': userT._id,
+      'users.for': userT._id,
     });
     res.json(appointments);
   } catch (err) {
@@ -229,6 +229,42 @@ router.post('/approve/:id', auth, async (req, res) => {
     //adding acceptedby field in Appointment that points to Teacher who accepted it
     await Appointment.findByIdAndUpdate(appointments._id, {
       $push: { users: { acceptedby: req.user.id } },
+    });
+
+    await appointments.save();
+
+    res.json(appointments);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+//@route    POST appointments/cancel/:id
+//@desc     Cancel a appointment
+//@access   Private
+router.post('/cancel/:id', auth, async (req, res) => {
+  try {
+    const appointments = await Appointment.findById(req.params.id);
+
+    //check if the appointment has already been canceled
+    if (appointments.canceled === true) {
+      return res.status(400).json({ msg: 'Appointment already canceled' });
+    }
+
+    //check if the person is a teacher
+    const userT = await User.findOne({ _id: req.user.id });
+    const roles = await Role.findOne({ _id: userT.role });
+
+    //update of canceled on appointment
+    await Appointment.updateOne(
+      { _id: appointments.id },
+      { $set: { canceled: 'true' } }
+    );
+
+    //adding acceptedby field in Appointment that points to Teacher who accepted it
+    await Appointment.findByIdAndUpdate(appointments._id, {
+      $push: { users: { canceledby: req.user.id } },
     });
 
     await appointments.save();

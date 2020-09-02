@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Table from '../table/Table';
-import { getAppointments, approveAppointment } from '../../actions/appointment';
+import { getAppointments } from '../../actions/appointment';
+import { approveTeacher } from '../../actions/teachers';
 import './Appointments.css';
 import Moment from 'react-moment';
 const headers = [
@@ -26,6 +27,14 @@ const headers = [
     label: 'Created by',
   },
   {
+    key: 'canceled',
+    label: 'Canceled',
+  },
+  {
+    key: 'users.canceledby',
+    label: 'Canceled by',
+  },
+  {
     key: 'datecreated',
     label: 'Date Created',
   },
@@ -36,7 +45,7 @@ const headers = [
 ];
 
 function formatYesNo(value) {
-  return value === 0 ? 'No' : 'Yes';
+  return value == 0 ? 'No' : 'Yes';
 }
 
 class Appointments extends Component {
@@ -54,28 +63,19 @@ class Appointments extends Component {
     const { getAppointments } = this.props;
     getAppointments();
   };
-
-  approveAppointment = () => {
-    const { approveAppointment } = this.state;
-    approveAppointment();
+  approveTeacher = () => {
+    const { approveTeacher } = this.state;
+    approveTeacher();
   };
 
   getTableOptions = () => {
-    const { approveAppointment } = this.props;
     const options = {
       customComponents: {
         actions: {
           component: (rowData) => (
             <div>
-              <button onClick={() => approveAppointment(rowData._id)}>
-                Approve Appointment
-              </button>
-              <button
-                onClick={() => {
-                  console.log('from cancel: ', rowData);
-                }}
-              >
-                Cancel
+              <button onClick={() => approveTeacher(rowData._id)}>
+                Approve Teacher
               </button>
             </div>
           ),
@@ -94,6 +94,11 @@ class Appointments extends Component {
         approved: {
           component: (rowData) => {
             return <div>{formatYesNo(rowData.approved)}</div>;
+          },
+        },
+        canceled: {
+          component: (rowData) => {
+            return <div>{formatYesNo(rowData.canceled)}</div>;
           },
         },
       },
@@ -120,7 +125,8 @@ class Appointments extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   getAppointments: () => dispatch(getAppointments()),
-  approveAppointment: (id) => dispatch(approveAppointment(id)),
+
+  approveTeacher: (id) => dispatch(approveTeacher(id)),
 });
 
 const mapStateToProps = (state) => ({

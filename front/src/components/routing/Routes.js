@@ -14,7 +14,7 @@ import MySubjects from '../subjects/MySubjects';
 import Subjects from '../subjects/Subjects';
 import AppointmentsStudent from '../appointments/AppointmentsStudent';
 import AppointmentsTeacher from '../appointments/AppointmentsTeacher';
-import Teachers from '../tutors/Tutors';
+import Teachers from '../teachers/Teachers';
 
 import { isAdmin, isTeacher, isStudent } from '../../utils/helpers';
 

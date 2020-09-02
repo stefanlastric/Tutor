@@ -6,14 +6,22 @@ const SubjectSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    description: {
+      type: String,
+      required: true,
+    },
     priceperhour: {
       type: String,
       trim: true,
       required: true,
     },
-    studentlimit: {
+    available: {
+      type: Boolean,
+      default: true,
+    },
+    timelimit: {
       type: String,
-      required: true,
+      default: '2 hours',
     },
     date: {
       type: Date,

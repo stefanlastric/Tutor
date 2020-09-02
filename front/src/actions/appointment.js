@@ -7,8 +7,10 @@ import {
   APPOINTMENT_ERROR,
   DELETE_APPOINTMENT,
   APPROVE_APPOINTMENT,
+  CANCEL_APPOINTMENT,
 } from './types';
 
+//Approve appointment
 export const approveAppointment = (id) => async (dispatch) => {
   try {
     const config = {
@@ -23,6 +25,29 @@ export const approveAppointment = (id) => async (dispatch) => {
       payload: { id },
     });
     dispatch(setAlert('Appointment Approved', 'success'));
+  } catch (err) {
+    dispatch({
+      type: APPOINTMENT_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+// Cancel appointment
+export const cancelAppointment = (id) => async (dispatch) => {
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const res = await axios.post(`/appointments/cancel/${id}`);
+
+    dispatch({
+      type: CANCEL_APPOINTMENT,
+      payload: { id },
+    });
+    dispatch(setAlert('Appointment Canceled', 'success'));
   } catch (err) {
     dispatch({
       type: APPOINTMENT_ERROR,
