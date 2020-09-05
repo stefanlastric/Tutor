@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Table from '../table/Table';
-import { getAppointments } from '../../actions/appointment';
 import { approveTeacher } from '../../actions/teachers';
+import { getAppointments, createAppointment } from '../../actions/appointment';
 import './Appointments.css';
 import Moment from 'react-moment';
 const headers = [
@@ -38,10 +38,6 @@ const headers = [
     key: 'datecreated',
     label: 'Date Created',
   },
-  {
-    key: 'actions',
-    label: 'Actions',
-  },
 ];
 
 function formatYesNo(value) {
@@ -63,23 +59,14 @@ class Appointments extends Component {
     const { getAppointments } = this.props;
     getAppointments();
   };
-  approveTeacher = () => {
-    const { approveTeacher } = this.state;
-    approveTeacher();
+  approveTeacher = (id) => {
+    const { approveTeacher } = this.props;
+    approveTeacher(id);
   };
 
   getTableOptions = () => {
     const options = {
       customComponents: {
-        actions: {
-          component: (rowData) => (
-            <div>
-              <button onClick={() => approveTeacher(rowData._id)}>
-                Approve Teacher
-              </button>
-            </div>
-          ),
-        },
         datecreated: {
           component: (rowData) => {
             return (
@@ -127,6 +114,8 @@ const mapDispatchToProps = (dispatch) => ({
   getAppointments: () => dispatch(getAppointments()),
 
   approveTeacher: (id) => dispatch(approveTeacher(id)),
+  createAppointments: (data, history) =>
+    dispatch(createAppointment(data, history)),
 });
 
 const mapStateToProps = (state) => ({

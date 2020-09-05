@@ -20,29 +20,29 @@ class AddAppointment extends Component {
     });
   };
 
-  addNewAppointments = (event) => {
-    event.preventDefault();
-    Axios.post(
-      '/appointments',
-      {
-        title: this.state.title,
-        price: this.state.price,
-        timelimit: this.state.timelimit,
-      },
-      { headers: { Authorization: 'myJwtToken' } }
-    )
-      .then((response) => {
-        console.log('Appointment successfully added.');
-        alert('Appointment successfully added.');
-        this.props.history.push('/appointments');
-      })
-      .catch((error) => {
-        console.log(error.response);
-      })
-      .finally(() => {
-        console.log('Request completed.');
-      });
-  };
+  // addNewAppointments = (event) => {
+  //   event.preventDefault();
+  //   Axios.post(
+  //     '/appointments',
+  //     {
+  //       title: this.state.title,
+  //       price: this.state.price,
+  //       timelimit: this.state.timelimit,
+  //     },
+  //     { headers: { Authorization: 'myJwtToken' } }
+  //   )
+  //     .then((response) => {
+  //       console.log('Appointment successfully added.');
+  //       alert('Appointment successfully added.');
+  //       this.props.history.push('/appointments');
+  //     })
+  //     .catch((error) => {
+  //       console.log(error.response);
+  //     })
+  //     .finally(() => {
+  //       console.log('Request completed.');
+  //     });
+  // };
 
   render() {
     console.log(this.props);

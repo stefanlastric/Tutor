@@ -4,6 +4,7 @@ import Table from '../table/Table';
 import {
   getAppointmentsTeacher,
   approveAppointment,
+  cancelAppointment,
 } from '../../actions/appointment';
 import './Appointments.css';
 import Moment from 'react-moment';
@@ -58,9 +59,14 @@ class Appointments extends Component {
     getAppointmentsTeacher();
   };
 
-  approveAppointment = () => {
-    const { approveAppointment } = this.state;
-    approveAppointment();
+  approveAppointment = (id) => {
+    const { approveAppointment } = this.props;
+    approveAppointment(id);
+  };
+
+  cancelAppointment = (id) => {
+    const { cancelAppointment } = this.props;
+    cancelAppointment(id);
   };
 
   getTableOptions = () => {
@@ -70,9 +76,17 @@ class Appointments extends Component {
         actions: {
           component: (rowData) => (
             <div>
-              <button onClick={() => approveAppointment(rowData._id)}>
-                Approve Appointment
-              </button>
+              {rowData.canceled ? (
+                'Canceled!'
+              ) : rowData.approved ? (
+                <button onClick={() => this.cancelAppointment(rowData._id)}>
+                  Cancel Appointment
+                </button>
+              ) : (
+                <button onClick={() => this.approveAppointment(rowData._id)}>
+                  Approve Appointment
+                </button>
+              )}
             </div>
           ),
         },
@@ -122,6 +136,7 @@ class Appointments extends Component {
 const mapDispatchToProps = (dispatch) => ({
   getAppointmentsTeacher: () => dispatch(getAppointmentsTeacher()),
   approveAppointment: (id) => dispatch(approveAppointment(id)),
+  cancelAppointment: (id) => dispatch(cancelAppointment(id)),
 });
 
 const mapStateToProps = (state) => ({

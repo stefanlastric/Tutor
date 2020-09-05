@@ -8,6 +8,7 @@ import {
   DELETE_APPOINTMENT,
   APPROVE_APPOINTMENT,
   CANCEL_APPOINTMENT,
+  ADD_APPOINTMENT,
 } from './types';
 
 //Approve appointment
@@ -18,7 +19,7 @@ export const approveAppointment = (id) => async (dispatch) => {
         'Content-Type': 'application/json',
       },
     };
-    const res = await axios.post(`/appointments/approve/${id}`);
+    const res = await axios.patch(`/appointments/approve/${id}`, null, config);
 
     dispatch({
       type: APPROVE_APPOINTMENT,
@@ -41,7 +42,7 @@ export const cancelAppointment = (id) => async (dispatch) => {
         'Content-Type': 'application/json',
       },
     };
-    const res = await axios.post(`/appointments/cancel/${id}`);
+    const res = await axios.patch(`/appointments/cancel/${id}`);
 
     dispatch({
       type: CANCEL_APPOINTMENT,
@@ -138,13 +139,13 @@ export const createAppointment = (formData, history, edit = false) => async (
     const res = await axios.post('/appointments', formData, config);
 
     dispatch({
-      type: GET_APPOINTMENT,
+      type: ADD_APPOINTMENT,
       payload: res.data,
     });
 
-    dispatch(
-      setAlert(edit ? 'Appointment Updated' : 'Appointment Created', 'success')
-    );
+    // dispatch(
+    //   setAlert(edit ? 'Appointment Updated' : 'Appointment Created', 'success')
+    // );
 
     if (!edit) {
       history.push('/');

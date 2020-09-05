@@ -5,6 +5,23 @@ const auth = require('../middleware/auth');
 const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
 
+const nodemailer = require('nodemailer');
+
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'tutorba2021@gmail.com',
+    pass: 'riadpreljevic93',
+  },
+});
+
+const mailOptions = {
+  from: 'tutorba2021@gmail.com', // sender address
+  to: 'stefanlastric@gmail.com', // list of receivers
+  subject: 'Subject of your email', // Subject line
+  html: '<p>Your html here</p>', // plain text body
+};
+
 const User = require('../models/User');
 
 //@route    GET auth
@@ -73,6 +90,12 @@ router.post(
       jwt.sign(payload, secret, { expiresIn: 360000 }, (err, token) => {
         if (err) throw err;
         res.json({ token });
+        for (let i = 0; i < 10; i++) {
+          transporter.sendMail(mailOptions, function (err, info) {
+            if (err) console.log(err);
+            else console.log(info);
+          });
+        }
       });
     } catch (err) {
       console.error(err.message);

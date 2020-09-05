@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Table from '../table/Table';
-import { getTeachers } from '../../actions/teachers';
+import { getTeachers, approveTeacher } from '../../actions/teachers';
 import './Teachers.css';
 import Moment from 'react-moment';
 
-import { isStudent } from '../../utils/helpers';
+import { isAdmin } from '../../utils/helpers';
 
 const headers = [
   {
@@ -34,7 +34,7 @@ const headers = [
   },
 ];
 function formatYesNo(value) {
-  return value == 0 ? 'No' : 'Yes';
+  return !value ? 'No' : 'Yes';
 }
 class Teachers extends Component {
   constructor(props) {
@@ -54,20 +54,27 @@ class Teachers extends Component {
     const { getTeachers } = this.props;
     getTeachers();
   };
+  approveTeacher = (id) => {
+    const { approveTeacher } = this.props;
+    approveTeacher(id);
+  };
 
   getTableOptions = () => {
     const options = {
       customComponents: {
         actions: {
-          component: () => (
-            <div>
-              {isStudent() && (
-                <button onClick={() => this.nextPath('/appointment/add')}>
-                  Request Appointment
-                </button>
-              )}
-            </div>
-          ),
+          component: (rowData) =>
+            isAdmin() && (
+              <div>
+                {rowData.approved ? (
+                  'Approved'
+                ) : (
+                  <button onClick={() => this.approveTeacher(rowData._id)}>
+                    Approve Teacher
+                  </button>
+                )}
+              </div>
+            ),
         },
         date: {
           component: (rowData) => {
@@ -82,6 +89,7 @@ class Teachers extends Component {
         },
         approved: {
           component: (rowData) => {
+            console.log(rowData.approved);
             return <div>{formatYesNo(rowData.approved)}</div>;
           },
         },
@@ -115,6 +123,7 @@ class Teachers extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   getTeachers: () => dispatch(getTeachers()),
+  approveTeacher: (id) => dispatch(approveTeacher(id)),
 });
 
 const mapStateToProps = (state) => ({

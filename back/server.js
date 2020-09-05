@@ -7,6 +7,7 @@ require('./models/Subject');
 
 // token kreira library unutar aplikacije
 const app = express();
+const nodemailer = require('nodemailer');
 
 const path = require('path');
 // Connect Database

@@ -20,6 +20,13 @@ router.get('/', async (req, res) => {
   }
 });
 
+// router.patch('/request-appointment/:id', auth, (req, res, next) => {
+//   const { user } = req;
+//   console.log(req.user);
+
+//   res.json({ user });
+// });
+
 //@route    GET appointments
 //@desc     Get all appointments student
 //@access   public
@@ -39,11 +46,11 @@ router.get('/student', async (req, res) => {
 //@route    GET appointments
 //@desc     Get all appointments teacher
 //@access   public
-router.get('/teacher', async (req, res) => {
+router.get('/teacher', auth, async (req, res) => {
   try {
     const userT = await User.findOne({ _id: req.user.id });
     const appointments = await Appointment.find({
-      'users.for': userT._id,
+      'users.teacher': userT._id,
     });
     res.json(appointments);
   } catch (err) {
@@ -79,11 +86,11 @@ router.post(
   [
     auth,
     [
-      check('title', 'Title of appointment is required').not().isEmpty(),
-      check('price', 'Price of appointment is required').not().isEmpty(),
-      check('timelimit', 'Time limit of appointment is required')
-        .not()
-        .isEmpty(),
+      // check('title', 'Title of appointment is required').not().isEmpty(),
+      // check('price', 'Price of appointment is required').not().isEmpty(),
+      // check('timelimit', 'Time limit of appointment is required')
+      //   .not()
+      //   .isEmpty(),
     ],
   ],
   async (req, res) => {
@@ -93,12 +100,12 @@ router.post(
     }
 
     try {
-      const { title, price, timelimit } = req.body;
+      const { teacherId, subjectId } = req.body;
 
-      const appointmentsFields = {};
-      if (title) appointmentsFields.title = title;
-      if (price) appointmentsFields.price = price;
-      if (timelimit) appointmentsFields.timelimit = timelimit;
+      // const appointmentsFields = {};
+      // if (title) appointmentsFields.title = title;
+      // if (price) appointmentsFields.price = price;
+      // if (timelimit) appointmentsFields.timelimit = timelimit;
 
       // appointmentsFields.users = [req.user];
       // let appointments = await Appointment.findOne({ user: req.user.id });
@@ -111,10 +118,13 @@ router.post(
       //   );
 
       //create appointment
-      const appointments = new Appointment(appointmentsFields);
+      const appointments = new Appointment({});
       await appointments.save();
       await Appointment.findByIdAndUpdate(appointments._id, {
-        $push: { users: { createdby: req.user.id } },
+        $push: {
+          users: { createdby: req.user.id, teacher: teacherId },
+          subject: subjectId,
+        },
       });
       const dbUser = await User.findById(req.user.id);
       await User.findByIdAndUpdate(req.user.id, {
@@ -128,6 +138,21 @@ router.post(
     }
   }
 );
+
+router.delete('/', async (req, res) => {
+  try {
+    // const userT = await User.findOne({ _id: req.user.id });
+    // const roles = await Role.findOne({ _id: userT.role });
+
+    // if (userT.role === null || roles.name != 'Admin') {
+    //   return res.status(401).json({ msg: 'Authorization denied' });
+    // }
+    await Appointment.deleteMany();
+    return res.status(200).json({ msg: 'success' });
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 
 //@route    DELETE appointments/:id
 //@desc     Delete appointment by id
@@ -160,21 +185,6 @@ router.delete('/:id', auth, async (req, res) => {
   }
 });
 
-router.delete('/', async (req, res) => {
-  try {
-    const userT = await User.findOne({ _id: req.user.id });
-    const roles = await Role.findOne({ _id: userT.role });
-
-    if (userT.role === null || roles.name != 'Admin') {
-      return res.status(401).json({ msg: 'Authorization denied' });
-    }
-    await Appointment.deleteMany();
-    return res.status(200).json({ msg: 'success' });
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
 //@route    DELETE appointments/:idadmin
 //@desc     Delete appointment by id by Admin (ADMIN CRUD)
 //@access   private
@@ -204,10 +214,9 @@ router.delete('/:idadmin', auth, async (req, res) => {
 //@route    POST appointments/approve/:id
 //@desc     Approve a appointment
 //@access   Private
-router.post('/approve/:id', auth, async (req, res) => {
+router.patch('/approve/:id', auth, async (req, res) => {
   try {
     const appointments = await Appointment.findById(req.params.id);
-
     //check if the appointment has already been approved
     if (appointments.approved === true) {
       return res.status(400).json({ msg: 'Appointment already approved' });
@@ -243,14 +252,14 @@ router.post('/approve/:id', auth, async (req, res) => {
 //@route    POST appointments/cancel/:id
 //@desc     Cancel a appointment
 //@access   Private
-router.post('/cancel/:id', auth, async (req, res) => {
+router.patch('/cancel/:id', auth, async (req, res) => {
   try {
     const appointments = await Appointment.findById(req.params.id);
 
     //check if the appointment has already been canceled
-    if (appointments.canceled === true) {
-      return res.status(400).json({ msg: 'Appointment already canceled' });
-    }
+    // if (appointments.canceled === true) {
+    //   return res.status(400).json({ msg: 'Appointment already canceled' });
+    // }
 
     //check if the person is a teacher
     const userT = await User.findOne({ _id: req.user.id });

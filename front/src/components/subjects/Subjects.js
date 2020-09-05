@@ -5,6 +5,8 @@ import { getSubjects } from '../../actions/subject';
 import './Subjects.css';
 import Moment from 'react-moment';
 
+import { createAppointment } from '../../actions/appointment';
+
 const headers = [
   {
     key: 'title',
@@ -43,6 +45,16 @@ class Subjects extends Component {
     this.getSubjects();
   }
 
+  createAppointment = (subject) => {
+    const { createAppointment, history } = this.props;
+    console.log(subject);
+    const data = {
+      subjectId: subject._id,
+      teacherId: subject.createdby,
+    };
+    createAppointment(data, history);
+  };
+
   nextPath(path) {
     this.props.history.push(path);
   }
@@ -56,9 +68,9 @@ class Subjects extends Component {
     const options = {
       customComponents: {
         actions: {
-          component: () => (
+          component: (data) => (
             <div>
-              <button onClick={() => this.nextPath('/appointment/add')}>
+              <button onClick={() => this.createAppointment(data)}>
                 Request Appointment
               </button>
             </div>
@@ -71,10 +83,11 @@ class Subjects extends Component {
         },
         datecreated: {
           component: (rowData) => {
+            console.log(rowData);
             return (
               <div>
                 <Moment format='DD/MMM/YYYY hh:mm:ss'>
-                  {rowData.datecreated}
+                  {rowData.createdAt}
                 </Moment>
               </div>
             );
@@ -87,6 +100,7 @@ class Subjects extends Component {
   };
   render() {
     const { subjects, isLoading } = this.props;
+
     return (
       <div className='subjects_table'>
         {isLoading && <div>Loading..</div>}
@@ -104,6 +118,8 @@ class Subjects extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   getSubjects: () => dispatch(getSubjects()),
+  createAppointment: (data, history) =>
+    dispatch(createAppointment(data, history)),
 });
 
 const mapStateToProps = (state) => ({

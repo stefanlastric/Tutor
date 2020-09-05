@@ -1,17 +1,8 @@
 const mongoose = require('mongoose');
 const AppointmentSchema = new mongoose.Schema(
   {
-    title: {
-      type: String,
-      required: true,
-    },
-    price: {
-      type: String,
-      required: true,
-    },
     timelimit: {
       type: String,
-      required: true,
     },
     datecreated: {
       type: Date,
@@ -26,24 +17,18 @@ const AppointmentSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    subject: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'subject',
+    },
     users: {
-      for: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
-      },
       createdby: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user',
       },
-      acceptedby: {
+      teacher: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user',
-      },
-
-      canceledby: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
-        default: null,
       },
     },
   },

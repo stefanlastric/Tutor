@@ -6,6 +6,7 @@ const { check, validationResult } = require('express-validator');
 
 const auth = require('../middleware/auth');
 const User = require('../models/User');
+const Appointment = require('../models/Appointment');
 
 let secret;
 if (!process.env.HEROKU) {
@@ -107,24 +108,30 @@ router.post('/approve/:id', auth, async (req, res) => {
   try {
     const teachers = await User.findById(req.params.id);
 
+    const appointment = await Appointment.findById(req.params.id);
+    await Appointment.updateOne(
+      { _id: req.params.id },
+      { $set: { approved: true } }
+    );
+
     //check if the teacher has already been approved
-    if (teachers.approved === true) {
-      return res.status(400).json({ msg: 'Teacher already approved' });
-    }
+    // if (teachers.approved === true) {
+    //   return res.status(400).json({ msg: 'Teacher already approved' });
+    // }
 
-    //check if the person is a teacher
-    const userT = await User.findOne({ _id: req.user.id });
-    const roles = await Role.findOne({ _id: userT.role });
-    if (userT.role === null || roles.name != 'Admin') {
-      return res.status(401).json({ msg: 'Authorization denied' });
-    }
+    // //check if the person is a teacher
+    // const userT = await User.findOne({ _id: req.user.id });
+    // const roles = await Role.findOne({ _id: userT.role });
+    // if (userT.role === null || roles.name != 'Admin') {
+    //   return res.status(401).json({ msg: 'Authorization denied' });
+    // }
 
-    //update of approved teacher
-    await User.updateOne({ _id: teachers.id }, { $set: { approved: 'true' } });
+    // //update of approved teacher
+    // await User.updateOne({ _id: teachers.id }, { $set: { approved: 'true' } });
 
-    await teachers.save();
+    // await teachers.save();
 
-    res.json(teachers);
+    // res.json(teachers);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

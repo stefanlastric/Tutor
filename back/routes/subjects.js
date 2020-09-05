@@ -117,6 +117,7 @@ router.post(
       //create subject
       const subjects = new Subject(subjectsFields);
       await subjects.save();
+
       await Subject.findByIdAndUpdate(subjects._id, {
         $push: { createdby: req.user.id },
       });
