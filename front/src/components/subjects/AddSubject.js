@@ -48,7 +48,6 @@ class AddSubject extends Component {
   };
 
   render() {
-    console.log(this.props);
     return (
       <div className='add-subject'>
         <Form onSubmit={this.addNewProduct}>

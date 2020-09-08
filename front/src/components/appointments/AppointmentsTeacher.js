@@ -10,12 +10,8 @@ import './Appointments.css';
 import Moment from 'react-moment';
 const headers = [
   {
-    key: 'title',
-    label: 'Title',
-  },
-  {
-    key: 'price',
-    label: 'Price',
+    key: 'subject',
+    label: 'Subject',
   },
   {
     key: 'timelimit',

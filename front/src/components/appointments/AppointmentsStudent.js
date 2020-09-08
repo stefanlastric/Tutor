@@ -9,12 +9,12 @@ import './Appointments.css';
 import Moment from 'react-moment';
 const headers = [
   {
-    key: 'title',
-    label: 'Title',
+    key: 'subject',
+    label: 'Subject',
   },
   {
-    key: 'price',
-    label: 'Price',
+    key: 'users.teacher',
+    label: 'Teacher',
   },
   {
     key: 'timelimit',
@@ -35,10 +35,6 @@ const headers = [
   {
     key: 'canceled',
     label: 'Canceled',
-  },
-  {
-    key: 'users.canceledby',
-    label: 'Canceled by',
   },
 
   {

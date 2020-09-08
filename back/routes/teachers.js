@@ -104,15 +104,16 @@ router.get('/', async (req, res) => {
 //@route    POST teachers/approve/:id
 //@desc     Approve a teacher
 //@access   Private
-router.post('/approve/:id', auth, async (req, res) => {
+router.patch('/approve/:id', auth, async (req, res) => {
   try {
     const teachers = await User.findById(req.params.id);
 
-    const appointment = await Appointment.findById(req.params.id);
-    await Appointment.updateOne(
-      { _id: req.params.id },
-      { $set: { approved: true } }
-    );
+    // const appointment = await Appointment.findById(req.params.id);
+    // await Appointment.updateOne(
+
+    //   { _id: req.params.id },
+    //   { $set: { approved: true } }
+    // );
 
     //check if the teacher has already been approved
     // if (teachers.approved === true) {
@@ -126,12 +127,12 @@ router.post('/approve/:id', auth, async (req, res) => {
     //   return res.status(401).json({ msg: 'Authorization denied' });
     // }
 
-    // //update of approved teacher
-    // await User.updateOne({ _id: teachers.id }, { $set: { approved: 'true' } });
+    //update of approved teacher
+    await User.updateOne({ _id: teachers._id }, { $set: { approved: 'true' } });
 
-    // await teachers.save();
+    await teachers.save();
 
-    // res.json(teachers);
+    res.json(teachers);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

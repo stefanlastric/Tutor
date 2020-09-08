@@ -19,6 +19,10 @@ const headers = [
     label: 'Weekly student limit',
   },
   {
+    key: 'available',
+    label: 'Available',
+  },
+  {
     key: 'datecreated',
     label: 'Date Created',
   },
@@ -27,7 +31,9 @@ const headers = [
     label: 'Actions',
   },
 ];
-
+function formatYesNo(value) {
+  return value == 0 ? 'No' : 'Yes';
+}
 class Subjects extends Component {
   constructor(props) {
     super(props);
@@ -64,8 +70,20 @@ class Subjects extends Component {
               >
                 Delete
               </button>
+              <button
+                onClick={() => {
+                  console.log('from delete: ', rowData);
+                }}
+              >
+                Not Available
+              </button>
             </div>
           ),
+        },
+        available: {
+          component: (rowData) => {
+            return <div>{formatYesNo(rowData.available)}</div>;
+          },
         },
         datecreated: {
           component: (rowData) => {

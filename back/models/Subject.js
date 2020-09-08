@@ -43,6 +43,15 @@ const SubjectSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
     },
+    category: [
+      {
+        category: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'category',
+        },
+        name: { type: String, required: true },
+      },
+    ],
   },
   { timestamps: true }
 );

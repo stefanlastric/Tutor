@@ -143,13 +143,13 @@ export const createAppointment = (formData, history, edit = false) => async (
       payload: res.data,
     });
 
-    // dispatch(
-    //   setAlert(edit ? 'Appointment Updated' : 'Appointment Created', 'success')
-    // );
+    dispatch(
+      setAlert(edit ? 'Appointment Updated' : 'Appointment Created', 'success')
+    );
 
-    if (!edit) {
-      history.push('/');
-    }
+    // if (!edit) {
+    //   history.push('/');
+    // }
   } catch (err) {
     const errors = err.response.data.errors;
 

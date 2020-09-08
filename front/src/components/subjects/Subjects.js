@@ -6,6 +6,7 @@ import './Subjects.css';
 import Moment from 'react-moment';
 
 import { createAppointment } from '../../actions/appointment';
+import { isStudent } from '../../utils/helpers';
 
 const headers = [
   {
@@ -47,7 +48,7 @@ class Subjects extends Component {
 
   createAppointment = (subject) => {
     const { createAppointment, history } = this.props;
-    console.log(subject);
+
     const data = {
       subjectId: subject._id,
       teacherId: subject.createdby,
@@ -70,9 +71,11 @@ class Subjects extends Component {
         actions: {
           component: (data) => (
             <div>
-              <button onClick={() => this.createAppointment(data)}>
-                Request Appointment
-              </button>
+              {isStudent() && (
+                <button onClick={() => this.createAppointment(data)}>
+                  Request Appointment
+                </button>
+              )}
             </div>
           ),
         },
@@ -83,7 +86,6 @@ class Subjects extends Component {
         },
         datecreated: {
           component: (rowData) => {
-            console.log(rowData);
             return (
               <div>
                 <Moment format='DD/MMM/YYYY hh:mm:ss'>

@@ -12,7 +12,10 @@ const User = require('../models/User');
 //@access   public
 router.get('/', async (req, res) => {
   try {
-    const appointments = await Appointment.find();
+    const appointments = await Appointment.find()
+      .populate('subject')
+      .populate('users.createdby')
+      .populate('users.teacher');
     res.json(appointments);
   } catch (err) {
     console.error(err.message);

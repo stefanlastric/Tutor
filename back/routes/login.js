@@ -90,12 +90,12 @@ router.post(
       jwt.sign(payload, secret, { expiresIn: 360000 }, (err, token) => {
         if (err) throw err;
         res.json({ token });
-        for (let i = 0; i < 10; i++) {
-          transporter.sendMail(mailOptions, function (err, info) {
-            if (err) console.log(err);
-            else console.log(info);
-          });
-        }
+        // for (let i = 0; i < 10; i++) {
+        //   transporter.sendMail(mailOptions, function (err, info) {
+        //     if (err) console.log(err);
+        //     else console.log(info);
+        //   });
+        // }
       });
     } catch (err) {
       console.error(err.message);

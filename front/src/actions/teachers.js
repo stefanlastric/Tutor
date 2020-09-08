@@ -40,7 +40,7 @@ export const approveTeacher = (id) => async (dispatch) => {
         'Content-Type': 'application/json',
       },
     };
-    const res = await axios.post(`/teachers/approve/${id}`);
+    const res = await axios.patch(`/teachers/approve/${id}`);
 
     dispatch({
       type: APPROVE_TEACHER,

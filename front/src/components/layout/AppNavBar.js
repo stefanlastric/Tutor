@@ -18,14 +18,6 @@ const AppNavbar = ({ auth: { isAuthenticated, loading }, logout }) => {
       >
         Subjects
       </Nav.Link>{' '}
-      <Nav.Link
-        activeStyle={{ color: '#ED5035' }}
-        as={NavLink}
-        exact
-        to='/teachers'
-      >
-        Teachers
-      </Nav.Link>
       {isTeacher() && (
         <Nav>
           <Nav.Link
@@ -63,6 +55,14 @@ const AppNavbar = ({ auth: { isAuthenticated, loading }, logout }) => {
             to='/appointments'
           >
             Appointments
+          </Nav.Link>
+          <Nav.Link
+            activeStyle={{ color: '#ED5035' }}
+            as={NavLink}
+            exact
+            to='/teachers'
+          >
+            Teachers
           </Nav.Link>
         </Nav>
       )}
@@ -109,7 +109,6 @@ const AppNavbar = ({ auth: { isAuthenticated, loading }, logout }) => {
       </Nav.Item>
     </Nav>
   );
-  //TODO napraviti vise ovih
 
   return (
     <div className='navigation-bar'>

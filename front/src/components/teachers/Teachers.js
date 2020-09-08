@@ -20,10 +20,7 @@ const headers = [
     key: 'approved',
     label: 'Approved',
   },
-  {
-    key: 'subject',
-    label: 'Subjects',
-  },
+
   {
     key: 'date',
     label: 'Date created',
@@ -89,7 +86,6 @@ class Teachers extends Component {
         },
         approved: {
           component: (rowData) => {
-            console.log(rowData.approved);
             return <div>{formatYesNo(rowData.approved)}</div>;
           },
         },
@@ -105,7 +101,7 @@ class Teachers extends Component {
   };
   render() {
     const { teachers, isLoading } = this.props;
-    console.log(teachers);
+
     return (
       <div className='subjects_table'>
         {isLoading && <div>Loading..</div>}

@@ -7,12 +7,12 @@ import './Appointments.css';
 import Moment from 'react-moment';
 const headers = [
   {
-    key: 'title',
-    label: 'Title',
+    key: 'subject',
+    label: 'Subject',
   },
   {
-    key: 'price',
-    label: 'Price',
+    key: 'teacher',
+    label: 'Teacher',
   },
   {
     key: 'timelimit',
@@ -30,10 +30,7 @@ const headers = [
     key: 'canceled',
     label: 'Canceled',
   },
-  {
-    key: 'users.canceledby',
-    label: 'Canceled by',
-  },
+
   {
     key: 'datecreated',
     label: 'Date Created',
@@ -88,6 +85,24 @@ class Appointments extends Component {
             return <div>{formatYesNo(rowData.canceled)}</div>;
           },
         },
+        subject: {
+          component: (rowData) => {
+            return <div>{rowData.subject.title}</div>;
+          },
+        },
+        teacher: {
+          component: (rowData) => {
+            return (
+              <div>
+                {rowData &&
+                  rowData.users &&
+                  rowData.users[0] &&
+                  rowData.users[0].teacher &&
+                  rowData.users[0].teacher.name}
+              </div>
+            );
+          },
+        },
       },
     };
 
@@ -95,6 +110,7 @@ class Appointments extends Component {
   };
   render() {
     const { appointments, isLoading } = this.props;
+    console.log(appointments);
     return (
       <div className='appointments_table'>
         {isLoading && <div>Loading..</div>}
