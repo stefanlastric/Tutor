@@ -26,6 +26,7 @@ app.use('/users', require('./routes/users'));
 app.use('/teachers', require('./routes/teachers'));
 app.use('/subjects', require('./routes/subjects'));
 app.use('/appointments', require('./routes/appointments'));
+app.use('/category', require('./routes/category'));
 app.use('/login', require('./routes/login'));
 
 app.listen(PORT, () => console.log(`server started on port ${PORT}`));

@@ -12,10 +12,9 @@ const CategorySchema = new mongoose.Schema(
     subjects: [
       {
         subject: {
-          type: Schema.Types.ObjectId,
-          ref: 'subjects',
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'subject',
         },
-        name: { type: String, required: true },
       },
     ],
   },

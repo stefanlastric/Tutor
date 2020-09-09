@@ -6,29 +6,36 @@ import {
   GET_APPOINTMENTS,
   APPOINTMENT_ERROR,
   DELETE_APPOINTMENT,
-  APPROVE_APPOINTMENT,
-  CANCEL_APPOINTMENT,
+  APPROVE_APPOINTMENT_REQUEST,
+  APPROVE_APPOINTMENT_SUCCESS,
+  APPROVE_APPOINTMENT_FAIL,
+  CANCEL_APPOINTMENT_REQUEST,
+  CANCEL_APPOINTMENT_SUCCESS,
+  CANCEL_APPOINTMENT_FAIL,
   ADD_APPOINTMENT,
 } from './types';
 
 //Approve appointment
 export const approveAppointment = (id) => async (dispatch) => {
   try {
+    dispatch({
+      type: APPROVE_APPOINTMENT_REQUEST,
+    });
     const config = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
     const res = await axios.patch(`/appointments/approve/${id}`, null, config);
-
+    // alert('Appointment successfully approved.');
     dispatch({
-      type: APPROVE_APPOINTMENT,
-      payload: { id },
+      type: APPROVE_APPOINTMENT_SUCCESS,
+      payload: res.data,
     });
     dispatch(setAlert('Appointment Approved', 'success'));
   } catch (err) {
     dispatch({
-      type: APPOINTMENT_ERROR,
+      type: APPROVE_APPOINTMENT_FAIL,
       payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
@@ -37,6 +44,9 @@ export const approveAppointment = (id) => async (dispatch) => {
 // Cancel appointment
 export const cancelAppointment = (id) => async (dispatch) => {
   try {
+    dispatch({
+      type: CANCEL_APPOINTMENT_REQUEST,
+    });
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -45,13 +55,13 @@ export const cancelAppointment = (id) => async (dispatch) => {
     const res = await axios.patch(`/appointments/cancel/${id}`);
 
     dispatch({
-      type: CANCEL_APPOINTMENT,
-      payload: { id },
+      type: CANCEL_APPOINTMENT_SUCCESS,
+      payload: res.data,
     });
     dispatch(setAlert('Appointment Canceled', 'success'));
   } catch (err) {
     dispatch({
-      type: APPOINTMENT_ERROR,
+      type: CANCEL_APPOINTMENT_FAIL,
       payload: { msg: err.response.statusText, status: err.response.status },
     });
   }
@@ -142,10 +152,10 @@ export const createAppointment = (formData, history, edit = false) => async (
       type: ADD_APPOINTMENT,
       payload: res.data,
     });
-
-    dispatch(
-      setAlert(edit ? 'Appointment Updated' : 'Appointment Created', 'success')
-    );
+    alert('Appointment successfully requested.');
+    // dispatch(
+    //   setAlert(edit ? 'Appointment Updated' : 'Appointment Created', 'success')
+    // );
 
     // if (!edit) {
     //   history.push('/');
@@ -164,7 +174,7 @@ export const createAppointment = (formData, history, edit = false) => async (
   }
 };
 
-//Delete appointments
+//Delete appointment
 
 export const deleteAppointment = (id) => async (dispatch) => {
   try {

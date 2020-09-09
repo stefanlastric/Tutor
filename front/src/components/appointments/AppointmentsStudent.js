@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { isEmpty } from 'lodash';
 import Table from '../table/Table';
 import {
   getAppointmentsStudent,
   cancelAppointment,
+  createAppointment,
 } from '../../actions/appointment';
 import './Appointments.css';
 import Moment from 'react-moment';
@@ -13,7 +15,7 @@ const headers = [
     label: 'Subject',
   },
   {
-    key: 'users.teacher',
+    key: 'teacher',
     label: 'Teacher',
   },
   {
@@ -25,16 +27,17 @@ const headers = [
     label: 'Approved',
   },
   {
-    key: 'users.createdby',
+    key: 'createdby',
     label: 'Created by',
-  },
-  {
-    key: 'datecreated',
-    label: 'Date Created',
   },
   {
     key: 'canceled',
     label: 'Canceled',
+  },
+
+  {
+    key: 'datecreated',
+    label: 'Date Created',
   },
 
   {
@@ -58,13 +61,23 @@ class Appointments extends Component {
     this.getAppointmentsStudent();
   }
 
+  componentDidUpdate(prevProps) {
+    const { isLoading, approved, canceled } = this.props;
+    if (
+      prevProps.isLoading &&
+      !isLoading &&
+      (!isEmpty(approved) || !isEmpty(canceled))
+    ) {
+      this.getAppointmentsStudent();
+    }
+  }
   getAppointmentsStudent = () => {
     const { getAppointmentsStudent } = this.props;
     getAppointmentsStudent();
   };
-  cancelAppointment = () => {
-    const { cancelAppointment } = this.state;
-    cancelAppointment();
+  cancelAppointment = (id) => {
+    const { cancelAppointment } = this.props;
+    cancelAppointment(id);
   };
   getTableOptions = () => {
     const {} = this.props;
@@ -73,9 +86,13 @@ class Appointments extends Component {
         actions: {
           component: (rowData) => (
             <div>
-              <button onClick={() => cancelAppointment(rowData._id)}>
-                Cancel Appointment
-              </button>
+              {rowData.canceled ? (
+                'Canceled'
+              ) : (
+                <button onClick={() => this.cancelAppointment(rowData._id)}>
+                  Cancel Appointment
+                </button>
+              )}
             </div>
           ),
         },
@@ -98,6 +115,38 @@ class Appointments extends Component {
         canceled: {
           component: (rowData) => {
             return <div>{formatYesNo(rowData.canceled)}</div>;
+          },
+        },
+        subject: {
+          component: (rowData) => {
+            if (rowData.subject != null)
+              return <div>{rowData.subject.title}</div>;
+          },
+        },
+        teacher: {
+          component: (rowData) => {
+            return (
+              <div>
+                {rowData &&
+                  rowData.users &&
+                  rowData.users[0] &&
+                  rowData.users[0].teacher &&
+                  rowData.users[0].teacher.name}
+              </div>
+            );
+          },
+        },
+        createdby: {
+          component: (rowData) => {
+            return (
+              <div>
+                {rowData &&
+                  rowData.users &&
+                  rowData.users[0] &&
+                  rowData.users[0].createdby &&
+                  rowData.users[0].createdby.name}
+              </div>
+            );
           },
         },
       },
@@ -125,11 +174,14 @@ class Appointments extends Component {
 const mapDispatchToProps = (dispatch) => ({
   getAppointmentsStudent: () => dispatch(getAppointmentsStudent()),
   cancelAppointment: (id) => dispatch(cancelAppointment(id)),
+  createAppointments: (data, history) =>
+    dispatch(createAppointment(data, history)),
 });
 
 const mapStateToProps = (state) => ({
   appointments: state.appointments.appointments,
   isLoading: state.appointments.loading,
+  approved: state.appointments.approved,
+  canceled: state.appointments.canceled,
 });
-
 export default connect(mapStateToProps, mapDispatchToProps)(Appointments);

@@ -8,7 +8,6 @@ const SubjectSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
     },
     priceperhour: {
       type: String,
@@ -43,15 +42,10 @@ const SubjectSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
     },
-    category: [
-      {
-        category: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'category',
-        },
-        name: { type: String, required: true },
-      },
-    ],
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'category',
+    },
   },
   { timestamps: true }
 );

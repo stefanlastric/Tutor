@@ -8,12 +8,13 @@ const Subject = require('../models/Subject');
 const User = require('../models/User');
 const Role = require('../models/Role');
 
+const Category = require('../models/Category');
 //@route    GET subjects
 //@desc     Get all subjects
 //@access   public
 router.get('/', auth, async (req, res) => {
   try {
-    const subjects = await Subject.find();
+    const subjects = await Subject.find().populate('category');
     res.json(subjects);
   } catch (err) {
     console.error(err.message);
@@ -27,7 +28,9 @@ router.get('/', auth, async (req, res) => {
 router.get('/my', auth, async (req, res) => {
   try {
     const userT = await User.findOne({ _id: req.user.id });
-    const subjects = await Subject.find({ createdby: userT._id });
+    const subjects = await Subject.find({ createdby: userT._id }).populate(
+      'category'
+    );
     //check if subject exist
     if (!subjects) {
       return res.status(404).json({ msg: 'Subject does not exist' });
@@ -88,6 +91,7 @@ router.post(
     try {
       const userT = await User.findOne({ _id: req.user.id });
       const roles = await Role.findOne({ _id: userT.role });
+      const category = await Category.findOne({ title: req.body.category });
 
       if (userT.role == null && roles.name != 'Teacher') {
         return res
@@ -102,26 +106,13 @@ router.post(
       if (priceperhour) subjectsFields.priceperhour = priceperhour;
       if (timelimit) subjectsFields.timelimit = timelimit;
 
-      // subjectsFields.users = [req.user];
-      // let subjects = await Subject.findOne({ user: req.user.id });
-      // if (subjects) {
-      //   //update subject
-      //   subjects = await Subject.findOneAndUpdate(
-      //     { user: req.user.id },
-      //     { $set: subjectsFields },
-      //     { new: true, upsert: true }
-      //   );
-      //   console.log('test');
-      //   return res.json(subjects);
-      // }
-      //create subject
       const subjects = new Subject(subjectsFields);
       await subjects.save();
 
       await Subject.findByIdAndUpdate(subjects._id, {
-        $push: { createdby: req.user.id },
+        $push: { createdby: req.user.id, category: category.id },
       });
-      const dbUser = await User.findById(req.user.id);
+
       await User.findByIdAndUpdate(req.user.id, {
         $push: { subject: subjects._id },
       });
@@ -271,6 +262,64 @@ router.delete('/review/:id/:review_id', auth, async (req, res) => {
     await subjects.save();
 
     res.json(subjects.reviews);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+//@route    PATCH subjects/notavailable/:id
+//@desc     Set subject as not available
+//@access   Private
+router.patch('/notavailable/:id', auth, async (req, res) => {
+  try {
+    const subjects = await Subject.findById(req.params.id);
+
+    //check if the person is a teacher
+    const userT = await User.findOne({ _id: req.user.id });
+    const roles = await Role.findOne({ _id: userT.role });
+    if (userT.role === null || roles.name != 'Teacher') {
+      return res.status(401).json({ msg: 'Authorization denied' });
+    }
+
+    //update of availabilty on subject
+    await Subject.updateOne(
+      { _id: subjects.id },
+      { $set: { available: 'false' } }
+    );
+
+    await subjects.save();
+
+    res.json(subjects);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+//@route    PATCH subjects/available/:id
+//@desc     Set subject as available
+//@access   Private
+router.patch('/available/:id', auth, async (req, res) => {
+  try {
+    const subjects = await Subject.findById(req.params.id);
+
+    //check if the person is a teacher
+    const userT = await User.findOne({ _id: req.user.id });
+    const roles = await Role.findOne({ _id: userT.role });
+    if (userT.role === null || roles.name != 'Teacher') {
+      return res.status(401).json({ msg: 'Authorization denied' });
+    }
+
+    //update of availabilty on subject
+    await Subject.updateOne(
+      { _id: subjects.id },
+      { $set: { available: 'true' } }
+    );
+
+    await subjects.save();
+
+    res.json(subjects);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
+import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
 import Table from '../table/Table';
-import { getMySubjects } from '../../actions/subject';
+import {
+  getMySubjects,
+  notAvailableSubject,
+  availableSubject,
+  deleteSubject,
+} from '../../actions/subject';
 import './Subjects.css';
 
+import { getCategory } from '../../actions/category';
 import Moment from 'react-moment';
 const headers = [
   {
@@ -11,12 +18,12 @@ const headers = [
     label: 'Title',
   },
   {
-    key: 'priceperhour',
-    label: 'Price per hour',
+    key: 'category',
+    label: 'Category',
   },
   {
-    key: 'studentlimit',
-    label: 'Weekly student limit',
+    key: 'priceperhour',
+    label: 'Price per hour',
   },
   {
     key: 'available',
@@ -43,11 +50,44 @@ class Subjects extends Component {
   }
   componentDidMount() {
     this.getMySubjects();
+    this.getCategory();
+  }
+
+  componentDidUpdate(prevProps) {
+    const { isLoading, setAvailableData } = this.props;
+    if (
+      prevProps.isLoading &&
+      !isLoading &&
+      // (
+      !isEmpty(setAvailableData)
+      // ||
+      //   !isEmpty(setNotAvailableData) ||
+      //   !isEmpty(deleteSubjectData))
+    ) {
+      console.log('test');
+      this.getMySubjects();
+    }
   }
 
   getMySubjects = () => {
     const { getMySubjects } = this.props;
     getMySubjects();
+  };
+  availableSubject = (id) => {
+    const { availableSubject } = this.props;
+    availableSubject(id);
+  };
+  notAvailableSubject = (id) => {
+    const { notAvailableSubject } = this.props;
+    notAvailableSubject(id);
+  };
+  deleteSubject = (id) => {
+    const { deleteSubject } = this.props;
+    deleteSubject(id);
+  };
+  getCategory = () => {
+    const { getCategory } = this.props;
+    getCategory();
   };
 
   getTableOptions = () => {
@@ -56,26 +96,15 @@ class Subjects extends Component {
         actions: {
           component: (rowData) => (
             <div>
-              <button
-                onClick={() => {
-                  console.log('from edit: ', rowData);
-                }}
-              >
-                Edit
+              <button onClick={() => this.availableSubject(rowData._id)}>
+                Available
               </button>
-              <button
-                onClick={() => {
-                  console.log('from delete: ', rowData);
-                }}
-              >
-                Delete
-              </button>
-              <button
-                onClick={() => {
-                  console.log('from delete: ', rowData);
-                }}
-              >
+
+              <button onClick={() => this.notAvailableSubject(rowData._id)}>
                 Not Available
+              </button>
+              <button onClick={() => this.deleteSubject(rowData._id)}>
+                Delete
               </button>
             </div>
           ),
@@ -95,6 +124,11 @@ class Subjects extends Component {
                 </Moment>
               </div>
             );
+          },
+        },
+        category: {
+          component: (rowData) => {
+            return <div>{rowData.category && rowData.category.title}</div>;
           },
         },
       },
@@ -121,11 +155,17 @@ class Subjects extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   getMySubjects: () => dispatch(getMySubjects()),
+  notAvailableSubject: (id) => dispatch(notAvailableSubject(id)),
+  availableSubject: (id) => dispatch(availableSubject(id)),
+  deleteSubject: (id) => dispatch(deleteSubject(id)),
+  getCategory: () => dispatch(getCategory()),
 });
 
 const mapStateToProps = (state) => ({
   subjects: state.subjects.subjects,
   isLoading: state.subjects.loading,
+  setAvailableData: state.subjects.setAvailableData,
+  categories: state.category.category,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Subjects);

@@ -3,6 +3,7 @@ const AppointmentSchema = new mongoose.Schema(
   {
     timelimit: {
       type: String,
+      default: '2h',
     },
     datecreated: {
       type: Date,

@@ -7,6 +7,12 @@ import {
   SUBJECT_ERROR,
   GET_MY_SUBJECTS,
   DELETE_SUBJECT,
+  SET_NOT_AVAILABLE_SUBJECT_REQUEST,
+  SET_NOT_AVAILABLE_SUBJECT_FAIL,
+  SET_NOT_AVAILABLE_SUBJECT_SUCCESS,
+  SET_AVAILABLE_SUBJECT_REQUEST,
+  SET_AVAILABLE_SUBJECT_FAIL,
+  SET_AVAILABLE_SUBJECT_SUCCESS,
 } from './types';
 
 //export current user subjects
@@ -43,6 +49,61 @@ export const getSubjects = () => async (dispatch) => {
   }
 };
 
+//Set Not Available
+export const notAvailableSubject = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: SET_NOT_AVAILABLE_SUBJECT_REQUEST,
+    });
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const res = await axios.patch(`/subjects/notavailable/${id}`, null, config);
+
+    // alert('Subject successfully set Avaiable.');
+
+    dispatch({
+      type: SET_NOT_AVAILABLE_SUBJECT_SUCCESS,
+      payload: res.data,
+    });
+    dispatch(setAlert('Subject Available', 'success'));
+  } catch (err) {
+    dispatch({
+      type: SET_NOT_AVAILABLE_SUBJECT_FAIL,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
+
+//Set Available
+export const availableSubject = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: SET_AVAILABLE_SUBJECT_REQUEST,
+    });
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const res = await axios.patch(`/subjects/available/${id}`, null, config);
+
+    // alert('Subject successfully set Avaiable.');
+
+    dispatch({
+      type: SET_AVAILABLE_SUBJECT_SUCCESS,
+      payload: res.data,
+    });
+    dispatch(setAlert('Subject Available', 'success'));
+  } catch (err) {
+    dispatch({
+      type: SET_AVAILABLE_SUBJECT_FAIL,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    });
+  }
+};
 //Get my subjects
 export const getMySubjects = () => async (dispatch) => {
   try {
@@ -114,7 +175,7 @@ export const createSubject = (formData, history, edit = false) => async (
   }
 };
 
-//Delete subjects
+//Delete subject
 
 export const deleteSubject = (id) => async (dispatch) => {
   try {

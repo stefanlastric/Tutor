@@ -17,7 +17,15 @@ const AppNavbar = ({ auth: { isAuthenticated, loading }, logout }) => {
         to='/subjects'
       >
         Subjects
-      </Nav.Link>{' '}
+      </Nav.Link>
+      <Nav.Link
+        activeStyle={{ color: '#ED5035' }}
+        as={NavLink}
+        exact
+        to='/category'
+      >
+        Category
+      </Nav.Link>
       {isTeacher() && (
         <Nav>
           <Nav.Link
@@ -64,6 +72,14 @@ const AppNavbar = ({ auth: { isAuthenticated, loading }, logout }) => {
           >
             Teachers
           </Nav.Link>
+          <Nav.Link
+            activeStyle={{ color: '#ED5035' }}
+            as={NavLink}
+            exact
+            to='/category/add'
+          >
+            Add New Category
+          </Nav.Link>
         </Nav>
       )}
       {isStudent() && (
@@ -79,12 +95,12 @@ const AppNavbar = ({ auth: { isAuthenticated, loading }, logout }) => {
         </Nav>
       )}
       <Nav className='desno'>
-        <Nav.Item>
+        {/* <Nav.Item>
           <Nav.Link to='/dashboard'>
             <i className='fas fa-user'></i>{' '}
             <span className='hide-sm'>Profile</span>
           </Nav.Link>
-        </Nav.Item>
+        </Nav.Item> */}
         <Nav.Item>
           <Nav.Link onClick={logout} href='#!'>
             <i className='fas fa-sign-out-alt'></i>{' '}

@@ -3,14 +3,16 @@ import {
   GET_TEACHERS_SUCCESS,
   GET_TEACHERS_FAIL,
   GET_TEACHERS_INIT,
-  APPROVE_TEACHER,
-  APPROVE_TEACHER_ERROR,
+  APPROVE_TEACHER_REQUEST,
+  APPROVE_TEACHER_SUCCESS,
+  APPROVE_TEACHER_FAIL,
 } from '../actions/types';
 const initialState = {
   teachers: [],
   teacher: null,
   loading: false,
   error: {},
+  approved: null,
 };
 
 export default function (state = initialState, action) {
@@ -38,21 +40,29 @@ export default function (state = initialState, action) {
         error: {},
         teachers: payload,
       };
-    case APPROVE_TEACHER:
-      return {
-        ...state,
-        teachers: state.teachers.map((teacher) =>
-          teacher._id === payload.id ? { ...teacher } : teacher
-        ),
-        loading: false,
-      };
+
     case GET_TEACHERS_INIT:
       return initialState;
-    case APPROVE_TEACHER_ERROR:
+    case APPROVE_TEACHER_REQUEST:
       return {
         ...state,
-        error: payload,
+        loading: true,
+        error: {},
+        approved: null,
+      };
+    case APPROVE_TEACHER_FAIL:
+      return {
+        ...state,
+        error: action.payload,
         loading: false,
+        approved: null,
+      };
+    case APPROVE_TEACHER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        erorr: {},
+        approved: action.payload,
       };
     default:
       return state;

@@ -6,11 +6,10 @@ import {
   GET_TEACHERS_REQUEST,
   GET_TEACHERS_FAIL,
   GET_TEACHERS_SUCCESS,
-  APPROVE_TEACHER,
-  APPROVE_TEACHER_ERROR,
+  APPROVE_TEACHER_REQUEST,
+  APPROVE_TEACHER_SUCCESS,
+  APPROVE_TEACHER_FAIL,
 } from './types';
-
-import { setLocalStorageRole } from '../utils/helpers';
 
 //Get all teachers
 export const getTeachers = () => async (dispatch) => {
@@ -35,21 +34,24 @@ export const getTeachers = () => async (dispatch) => {
 //Approve teacher
 export const approveTeacher = (id) => async (dispatch) => {
   try {
+    dispatch({
+      type: APPROVE_TEACHER_REQUEST,
+    });
     const config = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
-    const res = await axios.patch(`/teachers/approve/${id}`);
+    const res = await axios.patch(`/teachers/approve/${id}`, null, config);
 
     dispatch({
-      type: APPROVE_TEACHER,
-      payload: { id },
+      type: APPROVE_TEACHER_SUCCESS,
+      payload: res.data,
     });
     dispatch(setAlert('Teacher Approved', 'success'));
   } catch (err) {
     dispatch({
-      type: APPROVE_TEACHER_ERROR,
+      type: APPROVE_TEACHER_FAIL,
       payload: { msg: err.response.statusText, status: err.response.status },
     });
   }

@@ -5,12 +5,20 @@ import {
   SUBJECT_ERROR,
   DELETE_SUBJECT,
   ADD_SUBJECT,
+  SET_NOT_AVAILABLE_SUBJECT_REQUEST,
+  SET_AVAILABLE_SUBJECT_REQUEST,
+  SET_AVAILABLE_SUBJECT_FAIL,
+  SET_AVAILABLE_SUBJECT_SUCCESS,
+  SET_NOT_AVAILABLE_SUBJECT_FAIL,
+  SET_NOT_AVAILABLE_SUBJECT_SUCCESS,
 } from '../actions/types';
 const initialState = {
   subjects: [],
   subject: null,
   loading: true,
   error: {},
+  setAvailableData: null,
+  setNotAvailableData: null,
 };
 
 export default function (state = initialState, action) {
@@ -37,7 +45,6 @@ export default function (state = initialState, action) {
         loading: false,
       };
 
-    //fix delete
     case DELETE_SUBJECT:
       return {
         ...state,
@@ -49,6 +56,48 @@ export default function (state = initialState, action) {
         ...state,
         subjects: payload,
         loading: false,
+      };
+    case SET_AVAILABLE_SUBJECT_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: {},
+        setAvailableData: null,
+      };
+    case SET_AVAILABLE_SUBJECT_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+        loading: false,
+        setAvailableData: null,
+      };
+    case SET_AVAILABLE_SUBJECT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        erorr: {},
+        setAvailableData: action.payload,
+      };
+    case SET_NOT_AVAILABLE_SUBJECT_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: {},
+        setNotAvailableData: null,
+      };
+    case SET_NOT_AVAILABLE_SUBJECT_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+        loading: false,
+        setNotAvailableData: null,
+      };
+    case SET_NOT_AVAILABLE_SUBJECT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        erorr: {},
+        setNotAvailableData: action.payload,
       };
     default:
       return state;

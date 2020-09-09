@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { isEmpty } from 'lodash';
 import Table from '../table/Table';
-import { approveTeacher } from '../../actions/teachers';
 import { getAppointments, createAppointment } from '../../actions/appointment';
 import './Appointments.css';
 import Moment from 'react-moment';
@@ -23,7 +23,7 @@ const headers = [
     label: 'Approved',
   },
   {
-    key: 'users.createdby',
+    key: 'createdby',
     label: 'Created by',
   },
   {
@@ -48,17 +48,24 @@ class Appointments extends Component {
       appointments: [],
     };
   }
+
   componentDidMount() {
     this.getAppointments();
   }
 
+  componentDidUpdate(prevProps) {
+    const { isLoading, approved, canceled } = this.props;
+    if (
+      prevProps.isLoading &&
+      !isLoading &&
+      (!isEmpty(approved) || !isEmpty(canceled))
+    ) {
+      this.getAppointments();
+    }
+  }
   getAppointments = () => {
     const { getAppointments } = this.props;
     getAppointments();
-  };
-  approveTeacher = (id) => {
-    const { approveTeacher } = this.props;
-    approveTeacher(id);
   };
 
   getTableOptions = () => {
@@ -68,7 +75,7 @@ class Appointments extends Component {
           component: (rowData) => {
             return (
               <div>
-                <Moment format='DD/MMM/YYYY hh:mm:ss'>
+                <Moment format='DD/MMM/YYYY hh:mm'>
                   {rowData.datecreated}
                 </Moment>
               </div>
@@ -87,7 +94,8 @@ class Appointments extends Component {
         },
         subject: {
           component: (rowData) => {
-            return <div>{rowData.subject.title}</div>;
+            if (rowData.subject != null)
+              return <div>{rowData.subject.title}</div>;
           },
         },
         teacher: {
@@ -103,6 +111,19 @@ class Appointments extends Component {
             );
           },
         },
+        createdby: {
+          component: (rowData) => {
+            return (
+              <div>
+                {rowData &&
+                  rowData.users &&
+                  rowData.users[0] &&
+                  rowData.users[0].createdby &&
+                  rowData.users[0].createdby.name}
+              </div>
+            );
+          },
+        },
       },
     };
 
@@ -110,7 +131,7 @@ class Appointments extends Component {
   };
   render() {
     const { appointments, isLoading } = this.props;
-    console.log(appointments);
+
     return (
       <div className='appointments_table'>
         {isLoading && <div>Loading..</div>}
@@ -128,8 +149,6 @@ class Appointments extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   getAppointments: () => dispatch(getAppointments()),
-
-  approveTeacher: (id) => dispatch(approveTeacher(id)),
   createAppointments: (data, history) =>
     dispatch(createAppointment(data, history)),
 });
@@ -137,6 +156,8 @@ const mapDispatchToProps = (dispatch) => ({
 const mapStateToProps = (state) => ({
   appointments: state.appointments.appointments,
   isLoading: state.appointments.loading,
+  approved: state.appointments.approved,
+  canceled: state.appointments.canceled,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Appointments);

@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-
+import Select from 'react-select';
 import { Form, Button } from 'react-bootstrap';
-
 import Axios from 'axios';
 import './AddSubject.css';
+import { getCategory } from '../../actions/category';
+
+import { connect } from 'react-redux';
 
 class AddSubject extends Component {
   constructor(props) {
@@ -14,12 +16,22 @@ class AddSubject extends Component {
       description: '',
       priceperhour: '',
       timelimit: '',
+      category: null,
     };
   }
   handleChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value,
     });
+  };
+
+  componentDidMount() {
+    this.getCategory();
+  }
+
+  getCategory = () => {
+    const { getCategory } = this.props;
+    getCategory();
   };
 
   addNewSubjects = (event) => {
@@ -31,6 +43,7 @@ class AddSubject extends Component {
         description: this.state.description,
         priceperhour: this.state.priceperhour,
         timelimit: this.state.timelimit,
+        category: this.state.category.value,
       },
       { headers: { Authorization: 'myJwtToken' } }
     )
@@ -46,8 +59,15 @@ class AddSubject extends Component {
         console.log('Request completed.');
       });
   };
-
+  mapOptions = () => {
+    const { categories } = this.props;
+    return categories.map((category) => ({
+      label: category.title,
+      value: category.title,
+    }));
+  };
   render() {
+    const { categories } = this.props;
     return (
       <div className='add-subject'>
         <Form onSubmit={this.addNewProduct}>
@@ -60,7 +80,18 @@ class AddSubject extends Component {
               placeholder='Enter subject title.'
             />
           </Form.Group>
+          <Form.Group>
+            <Form.Label>Category:</Form.Label>
 
+            {categories.length > 0 && (
+              <Select
+                options={this.mapOptions()}
+                onChange={(category) => {
+                  this.setState({ category });
+                }}
+              />
+            )}
+          </Form.Group>
           <Form.Group>
             <Form.Label>Description:</Form.Label>
             <Form.Control
@@ -99,5 +130,11 @@ class AddSubject extends Component {
     );
   }
 }
+const mapDispatchToProps = (dispatch) => ({
+  getCategory: () => dispatch(getCategory()),
+});
 
-export default AddSubject;
+const mapStateToProps = (state) => ({
+  categories: state.category.category,
+});
+export default connect(mapStateToProps, mapDispatchToProps)(AddSubject);

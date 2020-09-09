@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { isEmpty } from 'lodash';
 import Table from '../table/Table';
 import { getTeachers, approveTeacher } from '../../actions/teachers';
 import './Teachers.css';
@@ -43,8 +44,12 @@ class Teachers extends Component {
   componentDidMount() {
     this.getTeachers();
   }
-  nextPath(path) {
-    this.props.history.push(path);
+
+  componentDidUpdate(prevProps) {
+    const { isLoading, approved } = this.props;
+    if (prevProps.isLoading && !isLoading && !isEmpty(approved)) {
+      this.getTeachers();
+    }
   }
 
   getTeachers = () => {
@@ -89,11 +94,6 @@ class Teachers extends Component {
             return <div>{formatYesNo(rowData.approved)}</div>;
           },
         },
-        subjects: {
-          component: (rowData) => {
-            return <div className='clickable'>{rowData.subjects}</div>;
-          },
-        },
       },
     };
 
@@ -125,6 +125,7 @@ const mapDispatchToProps = (dispatch) => ({
 const mapStateToProps = (state) => ({
   teachers: state.teachers.teachers,
   isLoading: state.teachers.loading,
+  approved: state.teachers.approved,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Teachers);

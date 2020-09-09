@@ -15,8 +15,8 @@ import Subjects from '../subjects/Subjects';
 import AppointmentsStudent from '../appointments/AppointmentsStudent';
 import AppointmentsTeacher from '../appointments/AppointmentsTeacher';
 import Teachers from '../teachers/Teachers';
-
-import { isAdmin, isTeacher, isStudent } from '../../utils/helpers';
+import Category from '../category/Category';
+import AddCategory from '../category/AddCategory';
 
 class Routes extends React.Component {
   render() {
@@ -56,6 +56,7 @@ class Routes extends React.Component {
                   component={MySubjects}
                   exact
                 />
+                <Route private path='/category' component={Category} exact />
                 )&& isAdmin() && (
                 <Route
                   private
@@ -64,6 +65,7 @@ class Routes extends React.Component {
                   exact
                 />
                 <Route private path='/teachers' component={Teachers} exact />
+                <Route private path='/category/add' component={AddCategory} />
               </Switch>
             )}
             <Route component={NotFound} />
