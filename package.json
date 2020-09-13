@@ -4,7 +4,7 @@
   "description": "Tutor app",
   "main": "index.js",
   "dependencies": {
-    "concurrently": "^5.2.0",
+    "concurrently": "^5.3.0",
     "cors": "^2.8.5"
   },
   "devDependencies": {},
@@ -13,7 +13,8 @@
     "backend": "cd back && nodemon server.js",
     "dev": "concurrently --kill-others \"npm run backend\" \"npm run frontend\"",
     "install": "cd back && npm install && cd ../front && npm install",
-    "start": "cd front && npm start && cd ../back && node server.js"
+    "start": "cd front && npm start && cd ../back && node server.js",
+    "stop-linux": "killall node"
   },
   "repository": {
     "type": "git",

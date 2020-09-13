@@ -101,13 +101,7 @@ class Appointments extends Component {
         teacher: {
           component: (rowData) => {
             return (
-              <div>
-                {rowData &&
-                  rowData.users &&
-                  rowData.users[0] &&
-                  rowData.users[0].teacher &&
-                  rowData.users[0].teacher.name}
-              </div>
+              <div>{rowData && rowData.teacher && rowData.teacher.name}</div>
             );
           },
         },
@@ -115,11 +109,7 @@ class Appointments extends Component {
           component: (rowData) => {
             return (
               <div>
-                {rowData &&
-                  rowData.users &&
-                  rowData.users[0] &&
-                  rowData.users[0].createdby &&
-                  rowData.users[0].createdby.name}
+                {rowData && rowData.createdby && rowData.createdby.name}
               </div>
             );
           },

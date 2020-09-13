@@ -15,24 +15,24 @@ th {
   padding: 16px;
   border-top: 1px solid gray;
   border-bottom: 1px solid gray;
-  &:first-child {
+  align-items: baseline;
+  /* &:first-child {
     border-left: 1px solid gray;
   }
   &:last-child {
     border-right: 1px solid gray;
-  }
+  } */
 }
 td {
-  padding: 16px;
-  border: 1px solid gray;
+  padding: 1rem;
 }
 
 .table_header {
-  border: 10px solid red !important;
   margin-bottom: 16px;
 }
 .table_header_row {
   background-color: white;
+  align-items: center;
 }
 
 .table_row_data {

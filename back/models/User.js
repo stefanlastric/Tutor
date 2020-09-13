@@ -38,8 +38,9 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       required: [true, 'Please Enter your password'],
     },
-    approved: {
+    suspended: {
       type: Boolean,
+      default: false,
       // 0 not , 1 yes
     },
     role: {

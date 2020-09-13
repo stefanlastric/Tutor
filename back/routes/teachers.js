@@ -101,38 +101,19 @@ router.get('/', async (req, res) => {
   }
 });
 
-//@route    POST teachers/approve/:id
-//@desc     Approve a teacher
+//@route    POST teachers/suspended/:id
+//@desc     Suspend a teacher
 //@access   Private
-router.patch('/approve/:id', auth, async (req, res) => {
+router.patch('/suspended/:id', auth, async (req, res) => {
   try {
-    const teachers = await User.findById(req.params.id);
+    const teacher = await User.findById(req.params.id);
 
-    // const appointment = await Appointment.findById(req.params.id);
-    // await Appointment.updateOne(
+    //update of suspended teacher
+    await User.updateOne({ _id: teacher._id }, { $set: { suspended: 'true' } });
 
-    //   { _id: req.params.id },
-    //   { $set: { approved: true } }
-    // );
+    await teacher.save();
 
-    //check if the teacher has already been approved
-    // if (teachers.approved === true) {
-    //   return res.status(400).json({ msg: 'Teacher already approved' });
-    // }
-
-    // //check if the person is a teacher
-    // const userT = await User.findOne({ _id: req.user.id });
-    // const roles = await Role.findOne({ _id: userT.role });
-    // if (userT.role === null || roles.name != 'Admin') {
-    //   return res.status(401).json({ msg: 'Authorization denied' });
-    // }
-
-    //update of approved teacher
-    await User.updateOne({ _id: teachers._id }, { $set: { approved: 'true' } });
-
-    await teachers.save();
-
-    res.json(teachers);
+    res.json(teacher);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

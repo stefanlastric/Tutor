@@ -10,6 +10,8 @@ import {
 } from '../../actions/appointment';
 import './Appointments.css';
 import Moment from 'react-moment';
+import Modal from '../modal/Modal';
+
 const headers = [
   {
     key: 'subject',
@@ -55,6 +57,7 @@ class Appointments extends Component {
     super(props);
     this.state = {
       appointments: [],
+      modalVisible: false,
     };
   }
 
@@ -82,9 +85,10 @@ class Appointments extends Component {
     approveAppointment(id);
   };
 
-  cancelAppointment = (id) => {
+  cancelAppointment = () => {
     const { cancelAppointment } = this.props;
-    cancelAppointment(id);
+    const { selectedAppointment } = this.state;
+    cancelAppointment(selectedAppointment._id);
   };
 
   getTableOptions = () => {
@@ -97,11 +101,23 @@ class Appointments extends Component {
               {rowData.canceled ? (
                 'Canceled!'
               ) : rowData.approved ? (
-                <button onClick={() => this.cancelAppointment(rowData._id)}>
+                <button
+                  className='btn btn-secondary'
+                  onClick={() =>
+                    this.setState({
+                      modalVisible: true,
+                      selectedAppointment: rowData,
+                    })
+                  }
+                >
                   Cancel Appointment
                 </button>
               ) : (
-                <button onClick={() => this.approveAppointment(rowData._id)}>
+                <button
+                  onClick={() => this.approveAppointment(rowData._id)}
+                  type='button'
+                  class='btn btn-success'
+                >
                   Approve Appointment
                 </button>
               )}
@@ -168,15 +184,30 @@ class Appointments extends Component {
   };
   render() {
     const { appointments, isLoading } = this.props;
+    const { modalVisible, selectedAppointment } = this.state;
     return (
       <div className='appointments_table'>
         {isLoading && <div>Loading..</div>}
         {appointments && (
-          <Table
-            data={appointments}
-            headers={headers}
-            options={this.getTableOptions()}
-          />
+          <div>
+            <Table
+              data={appointments}
+              headers={headers}
+              options={this.getTableOptions()}
+            />
+            {modalVisible && (
+              <Modal
+                show
+                handleClose={() =>
+                  this.setState({
+                    modalVisible: false,
+                    selectedAppointment: null,
+                  })
+                }
+                onConfirm={() => this.cancelAppointment()}
+              ></Modal>
+            )}
+          </div>
         )}
       </div>
     );

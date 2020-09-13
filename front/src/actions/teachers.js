@@ -6,9 +6,9 @@ import {
   GET_TEACHERS_REQUEST,
   GET_TEACHERS_FAIL,
   GET_TEACHERS_SUCCESS,
-  APPROVE_TEACHER_REQUEST,
-  APPROVE_TEACHER_SUCCESS,
-  APPROVE_TEACHER_FAIL,
+  SUSPENDED_TEACHER_REQUEST,
+  SUSPENDED_TEACHER_SUCCESS,
+  SUSPENDED_TEACHER_FAIL,
 } from './types';
 
 //Get all teachers
@@ -31,27 +31,27 @@ export const getTeachers = () => async (dispatch) => {
   }
 };
 
-//Approve teacher
-export const approveTeacher = (id) => async (dispatch) => {
+//Suspend teacher
+export const suspendedTeacher = (id) => async (dispatch) => {
   try {
     dispatch({
-      type: APPROVE_TEACHER_REQUEST,
+      type: SUSPENDED_TEACHER_REQUEST,
     });
     const config = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
-    const res = await axios.patch(`/teachers/approve/${id}`, null, config);
+    const res = await axios.patch(`/teachers/suspended/${id}`, null, config);
 
     dispatch({
-      type: APPROVE_TEACHER_SUCCESS,
+      type: SUSPENDED_TEACHER_SUCCESS,
       payload: res.data,
     });
-    dispatch(setAlert('Teacher Approved', 'success'));
+    dispatch(setAlert('Teacher Suspended', 'success'));
   } catch (err) {
     dispatch({
-      type: APPROVE_TEACHER_FAIL,
+      type: SUSPENDED_TEACHER_FAIL,
       payload: { msg: err.response.statusText, status: err.response.status },
     });
   }

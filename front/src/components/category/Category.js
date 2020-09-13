@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Table from '../table/Table';
 import './Category.css';
 import { getCategory, deleteCategory } from '../../actions/category';
+import { isAdmin } from '../../utils/helpers';
 
 const headers = [
   {
@@ -50,10 +51,11 @@ class Category extends Component {
               {/* <button onClick={() => this.goToCategory(rowData._id)}>
                 Go to category
               </button> */}
-
-              <button onClick={() => this.deleteCategory(rowData._id)}>
-                Delete Category
-              </button>
+              {isAdmin() && (
+                <button onClick={() => this.deleteCategory(rowData._id)}>
+                  Delete Category
+                </button>
+              )}
             </div>
           ),
         },

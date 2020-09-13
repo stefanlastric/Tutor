@@ -1,4 +1,5 @@
 import axios from 'axios';
+import qs from 'qs';
 import { setAlert } from './alert';
 
 import {
@@ -33,9 +34,12 @@ export const getCurrentSubject = () => async (dispatch) => {
 };
 
 //Get all subjects
-export const getSubjects = () => async (dispatch) => {
+export const getSubjects = (params) => async (dispatch) => {
   try {
-    const res = await axios.get('/subjects');
+    const res = await axios.get(`subjects?${qs.stringify(params)}`);
+
+    console.log('qs: ', qs.stringify(params));
+    console.log('params: ', params);
 
     dispatch({
       type: GET_SUBJECTS,

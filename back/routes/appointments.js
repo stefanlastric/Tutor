@@ -13,22 +13,18 @@ const User = require('../models/User');
 router.get('/', async (req, res) => {
   try {
     const appointments = await Appointment.find()
+
       .populate('subject')
-      .populate('users.createdby')
-      .populate('users.teacher');
+      .populate('createdby')
+      .populate('teacher');
+    // console.log(appointments[0].teacher.suspended);
+    console.log(appointments);
     res.json(appointments);
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ msg: 'Server Error' });
   }
 });
-
-// router.patch('/request-appointment/:id', auth, (req, res, next) => {
-//   const { user } = req;
-//   console.log(req.user);
-
-//   res.json({ user });
-// });
 
 //@route    GET appointments
 //@desc     Get all appointments student
@@ -37,11 +33,11 @@ router.get('/student', auth, async (req, res) => {
   try {
     const userT = await User.findOne({ _id: req.user.id });
     const appointments = await Appointment.find({
-      'users.createdby': userT._id,
+      createdby: userT._id,
     })
       .populate('subject')
-      .populate('users.createdby')
-      .populate('users.teacher');
+      .populate('createdby')
+      .populate('teacher');
     res.json(appointments);
   } catch (err) {
     console.error(err.message);
@@ -56,11 +52,11 @@ router.get('/teacher', auth, async (req, res) => {
   try {
     const userT = await User.findOne({ _id: req.user.id });
     const appointments = await Appointment.find({
-      'users.teacher': userT._id,
+      teacher: userT._id,
     })
       .populate('subject')
-      .populate('users.createdby')
-      .populate('users.teacher');
+      .populate('createdby')
+      .populate('teacher');
     res.json(appointments);
   } catch (err) {
     console.error(err.message);
@@ -109,7 +105,7 @@ router.post(
     }
 
     try {
-      const { teacherId, subjectId } = req.body;
+      const { teacherId, subjectId, requestedDate } = req.body;
 
       // const appointmentsFields = {};
       // if (title) appointmentsFields.title = title;
@@ -126,13 +122,17 @@ router.post(
       //     { new: true, upsert: true }
       //   );
 
+      console.log(requestedDate);
+
       //create appointment
       const appointments = new Appointment({});
       await appointments.save();
       await Appointment.findByIdAndUpdate(appointments._id, {
         $push: {
-          users: { createdby: req.user.id, teacher: teacherId },
+          createdby: req.user.id,
+          teacher: teacherId,
           subject: subjectId,
+          requestedDate: requestedDate,
         },
       });
       const dbUser = await User.findById(req.user.id);
@@ -181,7 +181,7 @@ router.delete('/:id', auth, async (req, res) => {
       appointments.approved === true ||
       userT.role === null ||
       roles.name != 'Student' ||
-      appointments.users.createdby != userT._id
+      appointments.createdby != userT._id
     ) {
       return res.status(401).json({ msg: 'Authorization denied' });
     }
@@ -246,7 +246,7 @@ router.patch('/approve/:id', auth, async (req, res) => {
 
     //adding acceptedby field in Appointment that points to Teacher who accepted it
     await Appointment.findByIdAndUpdate(appointments._id, {
-      $push: { users: { acceptedby: req.user.id } },
+      $push: { acceptedby: req.user.id },
     });
 
     await appointments.save();
@@ -265,16 +265,6 @@ router.patch('/cancel/:id', auth, async (req, res) => {
   try {
     const appointments = await Appointment.findById(req.params.id);
 
-    // check if the appointment has already been canceled
-    // if (appointments.canceled === true) {
-    //   return res.status(400).json({ msg: 'Appointment already canceled' });
-    // }
-
-    // check if the person is a teacher
-    // const userT = await User.findOne({ _id: req.user.id });
-    // const roles = await Role.findOne({ _id: userT.role });
-
-    //update of canceled on appointment
     await Appointment.updateOne(
       { _id: appointments.id },
       { $set: { canceled: 'true' } }
@@ -282,7 +272,7 @@ router.patch('/cancel/:id', auth, async (req, res) => {
 
     //adding canceledby field in Appointment that points to Teacher who accepted it
     await Appointment.findByIdAndUpdate(appointments._id, {
-      $push: { users: { canceledby: req.user.id } },
+      $push: { canceledby: req.user.id },
     });
 
     await appointments.save();

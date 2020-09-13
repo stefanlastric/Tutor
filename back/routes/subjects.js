@@ -14,7 +14,19 @@ const Category = require('../models/Category');
 //@access   public
 router.get('/', auth, async (req, res) => {
   try {
-    const subjects = await Subject.find().populate('category');
+    const { category } = req.query;
+    const categoryObject = await Category.findOne({
+      title: category,
+    });
+    let subjects = null;
+    if (categoryObject) {
+      subjects = await Subject.find({
+        category: categoryObject._id,
+      }).populate('category');
+    } else {
+      subjects = await Subject.find().populate('category');
+    }
+
     res.json(subjects);
   } catch (err) {
     console.error(err.message);

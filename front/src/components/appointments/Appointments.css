@@ -1,3 +1,8 @@
 .appointments_table {
   width: 100%;
 }
+
+.appointment_date_modal {
+  display: flex;
+  flex-direction: column;
+}

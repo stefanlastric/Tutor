@@ -9,6 +9,9 @@ const AppointmentSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    requestedDate: {
+      type: Date,
+    },
     approved: {
       type: Boolean,
       //0 not 1 yes
@@ -22,15 +25,14 @@ const AppointmentSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'subject',
     },
-    users: {
-      createdby: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
-      },
-      teacher: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
-      },
+
+    createdby: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user',
+    },
+    teacher: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user',
     },
   },
   { timestamps: true }

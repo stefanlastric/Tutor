@@ -96,14 +96,24 @@ class Subjects extends Component {
         actions: {
           component: (rowData) => (
             <div>
-              <button onClick={() => this.availableSubject(rowData._id)}>
+              <button
+                onClick={() => this.availableSubject(rowData._id)}
+                className='btn btn-primary spacingr5'
+              >
                 Available
               </button>
 
-              <button onClick={() => this.notAvailableSubject(rowData._id)}>
+              <button
+                onClick={() => this.notAvailableSubject(rowData._id)}
+                className='btn btn-secondary'
+              >
                 Not Available
               </button>
-              <button onClick={() => this.deleteSubject(rowData._id)}>
+              <button
+                onClick={() => this.deleteSubject(rowData._id)}
+                type='button'
+                className='btn btn-danger spacingl5'
+              >
                 Delete
               </button>
             </div>

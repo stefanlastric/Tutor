@@ -9,6 +9,11 @@ import {
 } from '../../actions/appointment';
 import './Appointments.css';
 import Moment from 'react-moment';
+import Modal from '../modal/Modal';
+
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
 const headers = [
   {
     key: 'subject',
@@ -39,6 +44,10 @@ const headers = [
     key: 'datecreated',
     label: 'Date Created',
   },
+  {
+    key: 'requestedDate',
+    label: 'Date requested',
+  },
 
   {
     key: 'actions',
@@ -55,6 +64,7 @@ class Appointments extends Component {
     super(props);
     this.state = {
       appointments: [],
+      modalVisible: false,
     };
   }
   componentDidMount() {
@@ -75,9 +85,10 @@ class Appointments extends Component {
     const { getAppointmentsStudent } = this.props;
     getAppointmentsStudent();
   };
-  cancelAppointment = (id) => {
+  cancelAppointment = () => {
     const { cancelAppointment } = this.props;
-    cancelAppointment(id);
+    const { selectedAppointment } = this.state;
+    cancelAppointment(selectedAppointment._id);
   };
   getTableOptions = () => {
     const {} = this.props;
@@ -89,7 +100,15 @@ class Appointments extends Component {
               {rowData.canceled ? (
                 'Canceled'
               ) : (
-                <button onClick={() => this.cancelAppointment(rowData._id)}>
+                <button
+                  className='btn btn-secondary'
+                  onClick={() =>
+                    this.setState({
+                      modalVisible: true,
+                      selectedAppointment: rowData,
+                    })
+                  }
+                >
                   Cancel Appointment
                 </button>
               )}
@@ -102,6 +121,17 @@ class Appointments extends Component {
               <div>
                 <Moment format='DD/MMM/YYYY hh:mm:ss'>
                   {rowData.datecreated}
+                </Moment>
+              </div>
+            );
+          },
+        },
+        requestedDate: {
+          component: (rowData) => {
+            return (
+              <div>
+                <Moment format='DD/MMM/YYYY hh:mm:ss'>
+                  {rowData.requestedDate}
                 </Moment>
               </div>
             );
@@ -126,13 +156,7 @@ class Appointments extends Component {
         teacher: {
           component: (rowData) => {
             return (
-              <div>
-                {rowData &&
-                  rowData.users &&
-                  rowData.users[0] &&
-                  rowData.users[0].teacher &&
-                  rowData.users[0].teacher.name}
-              </div>
+              <div>{rowData && rowData.teacher && rowData.teacher.name}</div>
             );
           },
         },
@@ -140,11 +164,7 @@ class Appointments extends Component {
           component: (rowData) => {
             return (
               <div>
-                {rowData &&
-                  rowData.users &&
-                  rowData.users[0] &&
-                  rowData.users[0].createdby &&
-                  rowData.users[0].createdby.name}
+                {rowData && rowData.createdby && rowData.createdby.name}
               </div>
             );
           },
@@ -154,17 +174,35 @@ class Appointments extends Component {
 
     return options;
   };
+
   render() {
     const { appointments, isLoading } = this.props;
+    const { modalVisible, selectedAppointment } = this.state;
     return (
       <div className='appointments_table'>
         {isLoading && <div>Loading..</div>}
         {appointments && (
-          <Table
-            data={appointments}
-            headers={headers}
-            options={this.getTableOptions()}
-          />
+          <div>
+            <Table
+              data={appointments}
+              headers={headers}
+              options={this.getTableOptions()}
+            />
+            {modalVisible && (
+              <Modal
+                show
+                handleClose={() =>
+                  this.setState({
+                    modalVisible: false,
+                    selectedAppointment: null,
+                  })
+                }
+                onConfirm={() => this.cancelAppointment()}
+              >
+                }
+              </Modal>
+            )}
+          </div>
         )}
       </div>
     );

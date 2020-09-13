@@ -26,18 +26,6 @@ const SubjectSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    review: {
-      user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'users',
-      },
-      text: {
-        type: String,
-      },
-      name: {
-        type: String,
-      },
-    },
     createdby: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',

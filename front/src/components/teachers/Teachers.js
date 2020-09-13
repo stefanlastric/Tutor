@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { isEmpty } from 'lodash';
 import Table from '../table/Table';
-import { getTeachers, approveTeacher } from '../../actions/teachers';
+import { getTeachers, suspendedTeacher } from '../../actions/teachers';
 import './Teachers.css';
 import Moment from 'react-moment';
 
@@ -18,8 +18,8 @@ const headers = [
     label: 'Surname',
   },
   {
-    key: 'approved',
-    label: 'Approved',
+    key: 'suspended',
+    label: 'Suspended',
   },
 
   {
@@ -46,8 +46,15 @@ class Teachers extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { isLoading, approved } = this.props;
-    if (prevProps.isLoading && !isLoading && !isEmpty(approved)) {
+    const { isLoading, suspended } = this.props;
+    if (
+      prevProps.isLoading &&
+      !isLoading &&
+      suspended &&
+      !prevProps.suspended
+    ) {
+      console.log(suspended);
+      console.log('test');
       this.getTeachers();
     }
   }
@@ -56,9 +63,9 @@ class Teachers extends Component {
     const { getTeachers } = this.props;
     getTeachers();
   };
-  approveTeacher = (id) => {
-    const { approveTeacher } = this.props;
-    approveTeacher(id);
+  suspendedTeacher = (id) => {
+    const { suspendedTeacher } = this.props;
+    suspendedTeacher(id);
   };
 
   getTableOptions = () => {
@@ -68,11 +75,11 @@ class Teachers extends Component {
           component: (rowData) =>
             isAdmin() && (
               <div>
-                {rowData.approved ? (
-                  'Approved'
+                {rowData.suspended ? (
+                  'Suspended'
                 ) : (
-                  <button onClick={() => this.approveTeacher(rowData._id)}>
-                    Approve Teacher
+                  <button onClick={() => this.suspendedTeacher(rowData._id)}>
+                    Suspend Teacher
                   </button>
                 )}
               </div>
@@ -89,9 +96,9 @@ class Teachers extends Component {
             );
           },
         },
-        approved: {
+        suspended: {
           component: (rowData) => {
-            return <div>{formatYesNo(rowData.approved)}</div>;
+            return <div>{formatYesNo(rowData.suspended)}</div>;
           },
         },
       },
@@ -119,13 +126,13 @@ class Teachers extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   getTeachers: () => dispatch(getTeachers()),
-  approveTeacher: (id) => dispatch(approveTeacher(id)),
+  suspendedTeacher: (id) => dispatch(suspendedTeacher(id)),
 });
 
 const mapStateToProps = (state) => ({
   teachers: state.teachers.teachers,
   isLoading: state.teachers.loading,
-  approved: state.teachers.approved,
+  suspended: state.teachers.suspended,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Teachers);

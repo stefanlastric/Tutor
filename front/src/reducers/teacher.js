@@ -3,16 +3,16 @@ import {
   GET_TEACHERS_SUCCESS,
   GET_TEACHERS_FAIL,
   GET_TEACHERS_INIT,
-  APPROVE_TEACHER_REQUEST,
-  APPROVE_TEACHER_SUCCESS,
-  APPROVE_TEACHER_FAIL,
+  SUSPENDED_TEACHER_REQUEST,
+  SUSPENDED_TEACHER_SUCCESS,
+  SUSPENDED_TEACHER_FAIL,
 } from '../actions/types';
 const initialState = {
   teachers: [],
   teacher: null,
   loading: false,
   error: {},
-  approved: null,
+  suspended: null,
 };
 
 export default function (state = initialState, action) {
@@ -43,26 +43,26 @@ export default function (state = initialState, action) {
 
     case GET_TEACHERS_INIT:
       return initialState;
-    case APPROVE_TEACHER_REQUEST:
+    case SUSPENDED_TEACHER_REQUEST:
       return {
         ...state,
         loading: true,
         error: {},
-        approved: null,
+        suspended: null,
       };
-    case APPROVE_TEACHER_FAIL:
+    case SUSPENDED_TEACHER_FAIL:
       return {
         ...state,
         error: action.payload,
         loading: false,
-        approved: null,
+        suspended: null,
       };
-    case APPROVE_TEACHER_SUCCESS:
+    case SUSPENDED_TEACHER_SUCCESS:
       return {
         ...state,
         loading: false,
         erorr: {},
-        approved: action.payload,
+        suspended: action.payload,
       };
     default:
       return state;

@@ -1,3 +1,15 @@
 .subjects_table {
   width: 100%;
 }
+
+.spacingl5 {
+  margin-left: 1rem;
+}
+
+.spacingr5 {
+  margin-right: 1rem;
+}
+
+.subjects_actions {
+  display: flex;
+}

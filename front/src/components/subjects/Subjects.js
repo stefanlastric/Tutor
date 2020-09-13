@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Table from '../table/Table';
-import { getSubjects } from '../../actions/subject';
+import { getSubjects, deleteSubject } from '../../actions/subject';
 import './Subjects.css';
 import Moment from 'react-moment';
 import Select from 'react-select';
 import { createAppointment } from '../../actions/appointment';
-import { isStudent } from '../../utils/helpers';
+import { isAdmin, isTeacher } from '../../utils/helpers';
 import { getCategory } from '../../actions/category';
 
-const options = [
-  { value: 'chocolate', label: 'Chocolate' },
-  { value: 'strawberry', label: 'Strawberry' },
-  { value: 'vanilla', label: 'Vanilla' },
-];
+import Modal from '../modal/Modal';
+import DatePicker from 'react-datepicker';
+import TimePicker from 'react-times';
+
+// use material theme
+import 'react-times/css/material/default.css';
+// or you can use classic theme
+import 'react-times/css/classic/default.css';
 
 const headers = [
   {
@@ -52,6 +55,10 @@ class Subjects extends Component {
     this.state = {
       subjects: [],
       selectedOption: null,
+      modalVisible: false,
+      selectedSubject: null,
+      selectedDate: null,
+      selectedTime: '10:00',
     };
   }
   componentDidMount() {
@@ -59,23 +66,48 @@ class Subjects extends Component {
     this.getCategory();
   }
 
-  createAppointment = (subject) => {
+  createAppointment = () => {
     const { createAppointment, history } = this.props;
-
+    const { selectedSubject, selectedDate, selectedTime } = this.state;
+    console.log('selectedDate: ', selectedDate);
+    console.log('selectedTime: ', selectedTime);
+    const date = new Date(
+      selectedDate.getUTCFullYear(),
+      selectedDate.getUTCMonth(),
+      selectedDate.getUTCDate() + 1,
+      selectedTime.hour,
+      selectedTime.minute,
+      0,
+      0
+    );
+    console.log(date.toString());
     const data = {
-      subjectId: subject._id,
-      teacherId: subject.createdby,
+      subjectId: selectedSubject._id,
+      teacherId: selectedSubject.createdby,
+      requestedDate: date,
     };
     createAppointment(data, history);
   };
-
+  deleteSubject = (id) => {
+    const { deleteSubject } = this.props;
+    deleteSubject(id);
+  };
   nextPath(path) {
     this.props.history.push(path);
   }
 
   getSubjects = () => {
     const { getSubjects } = this.props;
-    getSubjects();
+    const { selectedOption } = this.state;
+
+    let params;
+    if (selectedOption) {
+      params = {
+        category: selectedOption.value,
+      };
+    }
+
+    getSubjects(params);
   };
 
   getCategory = () => {
@@ -88,11 +120,33 @@ class Subjects extends Component {
       customComponents: {
         actions: {
           component: (data) => (
-            <div>
-              {isStudent() && (
-                <button onClick={() => this.createAppointment(data)}>
-                  Request Appointment
-                </button>
+            <div className='subjects_actions'>
+              {!isTeacher() && (
+                <div>
+                  <button
+                    className='btn btn-secondary'
+                    onClick={() =>
+                      this.setState({
+                        modalVisible: true,
+                        selectedSubject: data,
+                      })
+                    }
+                  >
+                    Request Appointment
+                  </button>
+                </div>
+              )}
+
+              {isAdmin() && (
+                <div>
+                  <button
+                    onClick={() => this.deleteSubject(data._id)}
+                    type='button'
+                    className='btn btn-danger spacingl5'
+                  >
+                    Delete
+                  </button>
+                </div>
               )}
             </div>
           ),
@@ -132,8 +186,47 @@ class Subjects extends Component {
     }));
   };
 
+  handleOptionChange = (selectedOption) => {
+    this.setState({ selectedOption }, () => this.getSubjects());
+  };
+
+  handleDateChange = (selectedDate) => {
+    this.setState({ selectedDate });
+  };
+
+  handleTimeChange = (selectedTime) => {
+    console.log(selectedTime);
+    this.setState({ selectedTime });
+  };
+
+  renderModal = () => {
+    const { selectedDate, selectedTime } = this.state;
+    return (
+      <div className='appointment_date_modal'>
+        <span>Choose Date:</span>
+        <DatePicker selected={selectedDate} onChange={this.handleDateChange} />
+        <span>Choose Time:</span>
+        <TimePicker
+          time={selectedTime && `${selectedTime.hour}:${selectedTime.minute}`}
+          onTimeChange={this.handleTimeChange}
+          theme='classic'
+          timeMode='24' // use 24 or 12 hours mode, default 24
+        />
+      </div>
+    );
+  };
+
   render() {
     const { subjects, isLoading, categories } = this.props;
+    const {
+      modalVisible,
+      selectedSubject,
+      selectedDate,
+      selectedTime,
+    } = this.state;
+
+    // console.log(selectedDate && selectedDate.toISOString());
+    // console.log(selectedTime);
 
     return (
       <div className='subjects_table'>
@@ -144,9 +237,9 @@ class Subjects extends Component {
             {categories.length > 0 && (
               <Select
                 options={this.mapOptions()}
-                onChange={(selectedOption) => {
-                  this.setState({ selectedOption });
-                }}
+                onChange={(selectedOption) =>
+                  this.handleOptionChange(selectedOption)
+                }
               />
             )}
             <Table
@@ -154,6 +247,24 @@ class Subjects extends Component {
               headers={headers}
               options={this.getTableOptions()}
             />
+            {modalVisible && (
+              <Modal
+                show
+                handleClose={() =>
+                  this.setState({
+                    modalVisible: false,
+                    selectedSubject: null,
+                    selectedDate: null,
+                    selectedTime: null,
+                  })
+                }
+                onConfirm={() => this.createAppointment()}
+                onConfirmDisabled={!selectedDate || !selectedTime}
+                title='Select date for appointment'
+              >
+                {this.renderModal()}
+              </Modal>
+            )}
           </div>
         )}
       </div>
@@ -162,7 +273,7 @@ class Subjects extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  getSubjects: () => dispatch(getSubjects()),
+  getSubjects: (params) => dispatch(getSubjects(params)),
   getCategory: () => dispatch(getCategory()),
   createAppointment: (data, history) =>
     dispatch(createAppointment(data, history)),
