@@ -3,27 +3,30 @@ import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-const Landing = ({ isAuthenticated }) => {
-  return (
-    <section className='landing'>
-      <div className='dark-overlay'>
-        <div className='landing-inner'>
-          <h1 className='x-large'>Welcome to Tutor.ba</h1>
-          <p className='lead'>
-            A place for those who want to learn and those who want to teach.
-          </p>
+import './Landing.css';
 
-          <div className='buttons'>
-            <Link to='/register' className='btn btn-primary'>
-              Sign Up
-            </Link>
-            <Link to='/login' className='btn btn-light'>
-              Login
-            </Link>
-          </div>
-        </div>
-      </div>
-    </section>
+import { Image } from 'react-bootstrap';
+const Landing = ({ isAuthenticated }) => {
+  if (isAuthenticated) {
+    return <Redirect to='/subjects' />;
+  }
+  return (
+    <div
+      // style={{
+      //   backgroundImage: `url("`,
+      //   backgroundRepeat: 'no-repeat',
+      //   opacity: '80%',
+      //   color: 'white',
+      //   flex: '100%',
+      //   display: 'flex
+      // }}
+      className='landing'
+    >
+      <img
+        src='https://images.pexels.com/photos/4145190/pexels-photo-4145190.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940&fbclid=IwAR3-Dyp4k7YICi83jFye3STMibWROsGnCAC9cbuBI03zBRXdqgX-nwaV1IA'
+        className='landing_image'
+      />
+    </div>
   );
 };
 

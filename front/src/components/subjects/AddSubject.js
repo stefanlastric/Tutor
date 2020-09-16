@@ -70,20 +70,20 @@ class AddSubject extends Component {
     const { categories } = this.props;
     return (
       <div className='add-subject'>
-        {' '}
-        <Form.Group>
-          <Form.Label>Category:</Form.Label>
-
-          {categories.length > 0 && (
-            <Select
-              options={this.mapOptions()}
-              onChange={(category) => {
-                this.setState({ category });
-              }}
-            />
-          )}
-        </Form.Group>
         <Form onSubmit={this.addNewProduct}>
+          <Form.Group>
+            <Form.Label>Category:</Form.Label>
+
+            {categories.length > 0 && (
+              <Select
+                options={this.mapOptions()}
+                onChange={(category) => {
+                  this.setState({ category });
+                }}
+              />
+            )}
+          </Form.Group>
+
           <Form.Group>
             <Form.Label>Title:</Form.Label>
             <Form.Control

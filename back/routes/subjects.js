@@ -12,7 +12,7 @@ const Category = require('../models/Category');
 //@route    GET subjects
 //@desc     Get all subjects
 //@access   public
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const { category } = req.query;
     const categoryObject = await Category.findOne({
@@ -22,9 +22,13 @@ router.get('/', auth, async (req, res) => {
     if (categoryObject) {
       subjects = await Subject.find({
         category: categoryObject._id,
-      }).populate('category');
+      })
+        .populate('category')
+        .populate('createdby');
     } else {
-      subjects = await Subject.find().populate('category');
+      subjects = await Subject.find()
+        .populate('category')
+        .populate('createdby');
     }
 
     res.json(subjects);

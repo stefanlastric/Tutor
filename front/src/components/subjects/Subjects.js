@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Table from '../table/Table';
-import { getSubjects, deleteSubject } from '../../actions/subject';
+import { getSubjects } from '../../actions/subject';
 import './Subjects.css';
 import Moment from 'react-moment';
 import Select from 'react-select';
@@ -31,7 +31,10 @@ const headers = [
     key: 'priceperhour',
     label: 'Price per hour',
   },
-
+  {
+    key: 'createdby',
+    label: 'Teacher',
+  },
   {
     key: 'available',
     label: 'Available',
@@ -69,8 +72,7 @@ class Subjects extends Component {
   createAppointment = () => {
     const { createAppointment, history } = this.props;
     const { selectedSubject, selectedDate, selectedTime } = this.state;
-    console.log('selectedDate: ', selectedDate);
-    console.log('selectedTime: ', selectedTime);
+
     const date = new Date(
       selectedDate.getUTCFullYear(),
       selectedDate.getUTCMonth(),
@@ -80,7 +82,7 @@ class Subjects extends Component {
       0,
       0
     );
-    console.log(date.toString());
+
     const data = {
       subjectId: selectedSubject._id,
       teacherId: selectedSubject.createdby,
@@ -92,6 +94,8 @@ class Subjects extends Component {
     const { deleteSubject } = this.props;
     deleteSubject(id);
   };
+
+  // za redirekt
   nextPath(path) {
     this.props.history.push(path);
   }
@@ -170,6 +174,15 @@ class Subjects extends Component {
         category: {
           component: (rowData) => {
             return <div>{rowData.category && rowData.category.title}</div>;
+          },
+        },
+        createdby: {
+          component: (rowData) => {
+            return (
+              <div>
+                {rowData && rowData.createdby && rowData.createdby.name}
+              </div>
+            );
           },
         },
       },

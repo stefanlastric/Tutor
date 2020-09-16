@@ -15,6 +15,19 @@ if (!process.env.HEROKU) {
   secret = process.env.jwtSecret;
 }
 
+const nodemailer = require('nodemailer');
+
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'tutorba2021@gmail.com',
+    pass: 'riadpreljevic93',
+  },
+});
+
+//@route    POST
+//@desc     Register user admin role
+//@access   public
 router.post(
   '/',
   [
@@ -76,6 +89,16 @@ router.post(
       jwt.sign(payload, secret, { expiresIn: 360000 }, (err, token) => {
         if (err) throw err;
         res.json({ token });
+        const mailOptions = {
+          from: 'tutorba2021@gmail.com', // sender address
+          to: email, // list of receivers
+          subject: 'Subject of your email', // Subject line
+          html: '<p>Your html here</p>', // plain text body
+        };
+        transporter.sendMail(mailOptions, function (err, info) {
+          if (err) console.log(err);
+          else console.log(info);
+        });
       });
     } catch (err) {
       console.error(err.message);
@@ -103,6 +126,7 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
+// delete all users
 router.delete('/', auth, async (req, res) => {
   try {
     await User.deleteMany();
@@ -158,35 +182,55 @@ router.delete('/:id', auth, async (req, res) => {
   }
 });
 
-//@route    POST users/:idpass
-//@desc     Change pass
+//@route    PATCH users/:idpass
+//@desc     Change pass request
 //@access   public
-router.post(
-  '/pass',
-  [auth, check('password', 'Password is required').exists()],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
-    const { password } = req.body;
-    try {
-      const userT = await User.findOne({ _id: req.user.id });
-
-      if (req.user.id != userT._id) {
-        return res.status(401).json({ msg: 'Authorization denied' });
-      }
-
-      //encrypt password
-      const salt = await bcrypt.genSalt(10);
-      userT.password = await bcrypt.hash(password, salt);
-      await userT.save();
-      return res.status(401).json({ msg: 'success' });
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).json({ msg: 'Server Error' });
-    }
+router.patch('/pass', auth, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
-);
+
+  // const data= (req.user.email)
+  //       transporter.sendMail(data);
+
+  try {
+    const userT = await User.findOne({ _id: req.user.id });
+    //encrypt password
+    const salt = await bcrypt.genSalt(10);
+    userT.password = await bcrypt.hash(password, salt);
+    await userT.save();
+    return res.status(401).json({ msg: 'success' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Server Error' });
+  }
+});
+
+router.patch('/update-my-profile', auth, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { name, surname } = req.body;
+
+  try {
+    const userT = await User.findOneAndUpdate(
+      { _id: req.user.id },
+      {
+        name,
+        surname,
+      }
+    );
+
+    await userT.save();
+    res.json({ user: userT });
+    // return res.status(401).json({ msg: 'success' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ msg: 'Server Error' });
+  }
+});
+
 module.exports = router;

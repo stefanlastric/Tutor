@@ -17,10 +17,7 @@ const headers = [
     key: 'subject',
     label: 'Subject',
   },
-  {
-    key: 'teacher',
-    label: 'Teacher',
-  },
+
   {
     key: 'timelimit',
     label: 'Timelimit',
@@ -31,7 +28,7 @@ const headers = [
   },
   {
     key: 'createdby',
-    label: 'Created by',
+    label: 'Student',
   },
   {
     key: 'canceled',
@@ -92,7 +89,7 @@ class Appointments extends Component {
   };
 
   getTableOptions = () => {
-    const { approveAppointment, cancelAppointment } = this.props;
+    const {} = this.props;
     const options = {
       customComponents: {
         actions: {
@@ -116,7 +113,7 @@ class Appointments extends Component {
                 <button
                   onClick={() => this.approveAppointment(rowData._id)}
                   type='button'
-                  class='btn btn-success'
+                  className='btn btn-success'
                 >
                   Approve Appointment
                 </button>
@@ -154,13 +151,7 @@ class Appointments extends Component {
         teacher: {
           component: (rowData) => {
             return (
-              <div>
-                {rowData &&
-                  rowData.users &&
-                  rowData.users[0] &&
-                  rowData.users[0].teacher &&
-                  rowData.users[0].teacher.name}
-              </div>
+              <div>{rowData && rowData.teacher && rowData.teacher.name}</div>
             );
           },
         },
@@ -168,11 +159,7 @@ class Appointments extends Component {
           component: (rowData) => {
             return (
               <div>
-                {rowData &&
-                  rowData.users &&
-                  rowData.users[0] &&
-                  rowData.users[0].createdby &&
-                  rowData.users[0].createdby.name}
+                {rowData && rowData.createdby && rowData.createdby.name}
               </div>
             );
           },

@@ -17,6 +17,8 @@ import AppointmentsTeacher from '../appointments/AppointmentsTeacher';
 import Teachers from '../teachers/Teachers';
 import Category from '../category/Category';
 import AddCategory from '../category/AddCategory';
+import TeachersStudents from '../teachers/TeachersStudents';
+import Profile from '../profile/Profile';
 
 class Routes extends React.Component {
   render() {
@@ -56,7 +58,14 @@ class Routes extends React.Component {
                   component={MySubjects}
                   exact
                 />
+                <Route
+                  private
+                  path='/teachersstudents'
+                  component={TeachersStudents}
+                  exact
+                />
                 <Route private path='/category' component={Category} exact />
+                <Route private path='/profile' component={Profile} exact />
                 )&& isAdmin() && (
                 <Route
                   private

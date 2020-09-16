@@ -6,14 +6,9 @@ import {
   USER_LOADED,
   AUTH_ERROR,
   LOGIN_SUCCESS,
-  LOGIN_SUCCESS_STUDENT,
-  LOGIN_SUCCESS_TEACHER,
-  LOGIN_SUCCESS_ADMIN,
   LOGIN_FAIL,
   LOGOUT,
   CLEAR_PROFILE,
-  GET_TEACHERS,
-  TEACHER_ERROR,
 } from './types';
 
 import setAuthToken from '../utils/setAuthToken';

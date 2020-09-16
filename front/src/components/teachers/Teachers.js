@@ -53,8 +53,6 @@ class Teachers extends Component {
       suspended &&
       !prevProps.suspended
     ) {
-      console.log(suspended);
-      console.log('test');
       this.getTeachers();
     }
   }

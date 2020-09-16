@@ -36,8 +36,8 @@ const Register = ({ setAlert, student, isAuthenticated }) => {
 
   return (
     <Fragment>
-      <Row className='justify-content-center'>
-        <Col sm={0}>
+      <Row className='login_wrapper'>
+        <div className='login_container'>
           <h1 className='large text-primary'>Sign Up</h1>
           <p className='lead'>
             <i className='fas fa-user'></i> Create Your Account
@@ -109,7 +109,7 @@ const Register = ({ setAlert, student, isAuthenticated }) => {
           <p className='my-1'>
             Already have an account? <Link to='/login'>Sign In</Link>
           </p>
-        </Col>
+        </div>
       </Row>
     </Fragment>
   );
