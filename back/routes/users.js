@@ -21,7 +21,7 @@ var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: 'tutorba2021@gmail.com',
-    pass: 'riadpreljevic93',
+    pass: '',
   },
 });
 
@@ -112,13 +112,7 @@ router.post(
 //@access   public
 router.get('/', auth, async (req, res) => {
   try {
-    const userT = await User.findOne({ _id: req.user.id });
-    const roles = await Role.findOne({ _id: userT.role });
-
-    if (userT.role === null || roles.name != 'Admin') {
-      return res.status(401).json({ msg: 'Authorization denied' });
-    }
-    const users = await User.find().populate('role');
+    const users = await User.find().populate('role').populate('subject');
     res.json(users);
   } catch (err) {
     console.error(err.message);
@@ -213,7 +207,7 @@ router.patch('/update-my-profile', auth, async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, surname } = req.body;
+  const { name, surname, qualification, education, city, age } = req.body;
 
   try {
     const userT = await User.findOneAndUpdate(
@@ -221,6 +215,10 @@ router.patch('/update-my-profile', auth, async (req, res) => {
       {
         name,
         surname,
+        qualification,
+        education,
+        city,
+        age,
       }
     );
 

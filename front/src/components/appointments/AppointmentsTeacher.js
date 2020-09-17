@@ -192,6 +192,7 @@ class Appointments extends Component {
                   })
                 }
                 onConfirm={() => this.cancelAppointment()}
+                title='Are you sure ?'
               ></Modal>
             )}
           </div>

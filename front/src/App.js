@@ -16,9 +16,7 @@ import './App.css';
 if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
-var sectionStyle = {
-  backgroundImage: `https://static.scientificamerican.com/sciam/cache/file/4E0744CD-793A-4EF8-B550B54F7F2C4406.jpg`,
-};
+
 const App = () => {
   useEffect(() => {
     store.dispatch(loadUser());

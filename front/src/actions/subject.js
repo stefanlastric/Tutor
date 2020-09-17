@@ -38,9 +38,6 @@ export const getSubjects = (params) => async (dispatch) => {
   try {
     const res = await axios.get(`subjects?${qs.stringify(params)}`);
 
-    console.log('qs: ', qs.stringify(params));
-    console.log('params: ', params);
-
     dispatch({
       type: GET_SUBJECTS,
       payload: res.data,

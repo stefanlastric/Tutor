@@ -17,8 +17,7 @@ router.get('/', async (req, res) => {
       .populate('subject')
       .populate('createdby')
       .populate('teacher');
-    // console.log(appointments[0].teacher.suspended);
-    console.log(appointments);
+
     res.json(appointments);
   } catch (err) {
     console.error(err.message);
@@ -88,16 +87,7 @@ router.get('/:id', async (req, res) => {
 router.post(
   '/',
 
-  [
-    auth,
-    [
-      // check('title', 'Title of appointment is required').not().isEmpty(),
-      // check('price', 'Price of appointment is required').not().isEmpty(),
-      // check('timelimit', 'Time limit of appointment is required')
-      //   .not()
-      //   .isEmpty(),
-    ],
-  ],
+  [auth, []],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -107,22 +97,12 @@ router.post(
     try {
       const { teacherId, subjectId, requestedDate } = req.body;
 
-      // const appointmentsFields = {};
-      // if (title) appointmentsFields.title = title;
-      // if (price) appointmentsFields.price = price;
-      // if (timelimit) appointmentsFields.timelimit = timelimit;
+      // check if suspended
+      const teacher = await User.findOne({ _id: teacherId });
 
-      // appointmentsFields.users = [req.user];
-      // let appointments = await Appointment.findOne({ user: req.user.id });
-      // if (appointments) {
-      //   //update appointment
-      //   appointments = await Appointment.findOneAndUpdate(
-      //     { user: req.user.id },
-      //     { $set: appointmentsFields },
-      //     { new: true, upsert: true }
-      //   );
-
-      console.log(requestedDate);
+      if (teacher.suspended) {
+        return res.status(404).json({ msg: 'The teacher is suspended' });
+      }
 
       //create appointment
       const appointments = new Appointment({});

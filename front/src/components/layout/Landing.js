@@ -5,10 +5,9 @@ import PropTypes from 'prop-types';
 
 import './Landing.css';
 
-import { Image } from 'react-bootstrap';
 const Landing = ({ isAuthenticated }) => {
   if (isAuthenticated) {
-    return <Redirect to='/subjects' />;
+    return <Redirect to='/appointments' />;
   }
   return (
     <div

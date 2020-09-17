@@ -18,14 +18,7 @@ const AppNavbar = ({ auth: { isAuthenticated, loading }, logout }) => {
       >
         Subjects
       </Nav.Link>
-      <Nav.Link
-        activeStyle={{ color: '#ED5035' }}
-        as={NavLink}
-        exact
-        to='/category'
-      >
-        Category
-      </Nav.Link>
+
       {isTeacher() && (
         <Nav>
           <Nav.Link
@@ -68,6 +61,14 @@ const AppNavbar = ({ auth: { isAuthenticated, loading }, logout }) => {
             activeStyle={{ color: '#ED5035' }}
             as={NavLink}
             exact
+            to='/category'
+          >
+            Category
+          </Nav.Link>
+          <Nav.Link
+            activeStyle={{ color: '#ED5035' }}
+            as={NavLink}
+            exact
             to='/teachers'
           >
             Teachers
@@ -104,13 +105,12 @@ const AppNavbar = ({ auth: { isAuthenticated, loading }, logout }) => {
       )}
       <Nav className='desno'>
         <Nav.Item>
-          <Nav.Link to='/dashboard'>
-            <i className='fas fa-user'></i>{' '}
+          <Nav.Link as={NavLink} exact to='/profile'>
             <span className='hide-sm'>Profile</span>
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>
-          <Nav.Link onClick={logout} href='#!'>
+          <Nav.Link onClick={logout} as={NavLink} exact to='/'>
             <i className='fas fa-sign-out-alt'></i>{' '}
             <span className='hide-sm'>Logout</span>
           </Nav.Link>

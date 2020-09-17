@@ -67,7 +67,7 @@ class AddCategory extends Component {
             />
           </Form.Group>
 
-          <Button variant='success' type='submit' onClick={this.addNewCategory}>
+          <Button variant='primary' type='submit' onClick={this.addNewCategory}>
             Submit
           </Button>
         </Form>

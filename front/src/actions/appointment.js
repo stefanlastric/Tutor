@@ -135,7 +135,7 @@ export const getAppointmentsById = (userId) => async (dispatch) => {
   }
 };
 
-//Create or update appointments
+//Create appointments
 export const createAppointment = (formData, history, edit = false) => async (
   dispatch
 ) => {
@@ -153,13 +153,6 @@ export const createAppointment = (formData, history, edit = false) => async (
       payload: res.data,
     });
     alert('Appointment successfully requested.');
-    // dispatch(
-    //   setAlert(edit ? 'Appointment Updated' : 'Appointment Created', 'success')
-    // );
-
-    // if (!edit) {
-    //   history.push('/');
-    // }
   } catch (err) {
     const errors = err.response.data.errors;
 

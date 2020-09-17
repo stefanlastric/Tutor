@@ -92,7 +92,7 @@ router.get('/', async (req, res) => {
   try {
     const role = await Role.findOne({ name: 'Teacher' });
 
-    const users = await User.find({ role: role.id });
+    const users = await User.find({ role: role.id }).populate('subject');
 
     res.json(users);
   } catch (err) {

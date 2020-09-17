@@ -1,11 +1,10 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { login } from '../../actions/auth';
-import { Row, Col } from 'react-bootstrap';
-import axios from 'axios';
 
+import { connect } from 'react-redux';
+import { login } from '../../actions/auth';
+import { Row } from 'react-bootstrap';
+import axios from 'axios';
+import './Profile.css';
 import setAuthToken from '../../utils/setAuthToken';
 // import {  } from ''
 
@@ -14,6 +13,10 @@ const Profile = (props) => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
+    userqualification: '',
+    usereducation: '',
+    usercity: '',
+    userage: '',
   });
 
   useEffect(() => {
@@ -21,6 +24,10 @@ const Profile = (props) => {
       ...formData,
       firstName: user.name,
       lastName: user.surname,
+      userqualification: user.qualification,
+      usereducation: user.education,
+      usercity: user.city,
+      userage: user.age,
     });
   }, []);
 
@@ -29,9 +36,13 @@ const Profile = (props) => {
     const data = {
       name: firstName,
       surname: lastName,
+      qualification: userqualification,
+      education: usereducation,
+      city: usercity,
+      age: userage,
     };
     setAuthToken(localStorage.token);
-    console.log(data);
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -48,11 +59,19 @@ const Profile = (props) => {
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const { firstName, lastName } = formData;
+  const {
+    firstName,
+    lastName,
+    userqualification,
+    usereducation,
+    usercity,
+    userage,
+  } = formData;
   return (
     <Fragment>
       <Row className='login_wrapper'>
         <div className='login_container'>
+          <div className='title'>Edit profile</div>
           <form className='form' onSubmit={(e) => onSubmit(e)}>
             <div className='form-group'>
               <input
@@ -70,7 +89,40 @@ const Profile = (props) => {
                 onChange={(e) => onChange(e)}
               />
             </div>
-            <input type='submit' className='btn btn-primary' value='Login' />
+            <div className='form-group'>
+              <input
+                placeholder='Qualification'
+                name='userqualification'
+                value={userqualification}
+                onChange={(e) => onChange(e)}
+              />
+            </div>
+            <div className='form-group'>
+              <input
+                placeholder='Education'
+                name='usereducation'
+                value={usereducation}
+                onChange={(e) => onChange(e)}
+              />
+            </div>
+            <div className='form-group'>
+              <input
+                placeholder='City'
+                name='usercity'
+                value={usercity}
+                onChange={(e) => onChange(e)}
+              />
+            </div>
+            <div className='form-group'>
+              <input
+                placeholder='Age'
+                name='userage'
+                value={userage}
+                onChange={(e) => onChange(e)}
+              />
+            </div>
+
+            <input type='submit' className='btn btn-primary' value='Save' />
           </form>
         </div>
       </Row>

@@ -52,7 +52,10 @@ class Category extends Component {
                 Go to category
               </button> */}
               {isAdmin() && (
-                <button onClick={() => this.deleteCategory(rowData._id)}>
+                <button
+                  className='btn btn-danger '
+                  onClick={() => this.deleteCategory(rowData._id)}
+                >
                   Delete Category
                 </button>
               )}

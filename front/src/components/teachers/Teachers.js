@@ -18,6 +18,18 @@ const headers = [
     label: 'Surname',
   },
   {
+    key: 'education',
+    label: 'Education',
+  },
+  {
+    key: 'qualification',
+    label: 'Qualification',
+  },
+  {
+    key: 'age',
+    label: 'Age',
+  },
+  {
     key: 'suspended',
     label: 'Suspended',
   },
@@ -76,7 +88,10 @@ class Teachers extends Component {
                 {rowData.suspended ? (
                   'Suspended'
                 ) : (
-                  <button onClick={() => this.suspendedTeacher(rowData._id)}>
+                  <button
+                    className='btn btn-danger '
+                    onClick={() => this.suspendedTeacher(rowData._id)}
+                  >
                     Suspend Teacher
                   </button>
                 )}

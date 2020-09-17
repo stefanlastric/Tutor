@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Table from '../table/Table';
-import { getSubjects } from '../../actions/subject';
+import { getSubjects, deleteSubject } from '../../actions/subject';
 import './Subjects.css';
 import Moment from 'react-moment';
 import Select from 'react-select';
@@ -208,7 +208,6 @@ class Subjects extends Component {
   };
 
   handleTimeChange = (selectedTime) => {
-    console.log(selectedTime);
     this.setState({ selectedTime });
   };
 
@@ -237,9 +236,6 @@ class Subjects extends Component {
       selectedDate,
       selectedTime,
     } = this.state;
-
-    // console.log(selectedDate && selectedDate.toISOString());
-    // console.log(selectedTime);
 
     return (
       <div className='subjects_table'>
@@ -288,6 +284,7 @@ class Subjects extends Component {
 const mapDispatchToProps = (dispatch) => ({
   getSubjects: (params) => dispatch(getSubjects(params)),
   getCategory: () => dispatch(getCategory()),
+  deleteSubject: (id) => dispatch(deleteSubject(id)),
   createAppointment: (data, history) =>
     dispatch(createAppointment(data, history)),
 });

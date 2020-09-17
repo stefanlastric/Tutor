@@ -64,7 +64,6 @@ class Subjects extends Component {
       //   !isEmpty(setNotAvailableData) ||
       //   !isEmpty(deleteSubjectData))
     ) {
-      console.log('test');
       this.getMySubjects();
     }
   }

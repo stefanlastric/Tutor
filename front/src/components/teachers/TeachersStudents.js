@@ -32,6 +32,10 @@ const headers = [
     label: 'Qualification',
   },
   {
+    key: 'age',
+    label: 'Age',
+  },
+  {
     key: 'suspended',
     label: 'Suspended',
   },
@@ -65,7 +69,7 @@ class Teachers extends Component {
     this.getTeachers();
   }
   createAppointment = () => {
-    const { createAppointment, history, teachers } = this.props;
+    const { createAppointment, history } = this.props;
     const {
       selectedTeacher,
       selectedDate,
@@ -82,13 +86,12 @@ class Teachers extends Component {
       0,
       0
     );
-    console.log(selectedTeacher);
     const data = {
       subjectId: selectedSubject.value,
       teacherId: selectedTeacher._id,
       requestedDate: date,
     };
-    console.log(data);
+
     createAppointment(data, history);
   };
 
@@ -149,8 +152,8 @@ class Teachers extends Component {
 
   mapTeacherSubjects = (subjects) =>
     subjects.map((subject) => ({
-      value: subject,
-      label: subject,
+      value: subject._id,
+      label: subject.title,
     }));
 
   handleSelectChange = (selectedSubject) => {
@@ -185,7 +188,7 @@ class Teachers extends Component {
     );
   };
   render() {
-    const { teachers, isLoading, categories } = this.props;
+    const { teachers, isLoading } = this.props;
     const {
       modalVisible,
       selectedTeacher,

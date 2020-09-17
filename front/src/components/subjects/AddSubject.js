@@ -124,7 +124,7 @@ class AddSubject extends Component {
             />
           </Form.Group>
 
-          <Button variant='success' type='submit' onClick={this.addNewSubjects}>
+          <Button variant='primary' type='submit' onClick={this.addNewSubjects}>
             Submit
           </Button>
         </Form>
